@@ -1,0 +1,258 @@
+---
+import { IMAGES, photo, srcset } from '../data/images';
+---
+
+<section class="hotel on-dark" id="hotel" aria-labelledby="hotel-title">
+  <div class="hotel__glyph" aria-hidden="true" data-drift="80">↓</div>
+
+  <div class="container hotel__grid">
+    <div class="hotel__copy">
+      <p class="eyebrow" data-reveal="fade">Staying at Teleport?</p>
+      <h2 id="hotel-title" class="h1" data-reveal="lines">
+        <span class="line"><span>Your dinner plans</span></span>
+        <span class="line"><span><em>are downstairs.</em></span></span>
+      </h2>
+      <div class="hotel__body" data-reveal="fade">
+        <p class="hotel__short">No searching.<br />No travelling across the city.</p>
+        <p class="lede">Come down, grab a table and end the day with Indian comfort food.</p>
+      </div>
+      <div class="hotel__cta" data-reveal="fade">
+        <a class="btn btn--light" href="/reserve?when=today&hotel=1#table">Reserve for Tonight <span class="arrow">→</span></a>
+        <p class="hotel__note">
+          <span class="hotel__key" aria-hidden="true"></span>
+          <span><strong>Hotel guest?</strong> Add your room number when booking.</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="hotel__visual">
+      <div class="hotel__frame media" data-reveal="image">
+        <img
+          data-parallax="0.16"
+          src={photo(IMAGES.friendsDinner, 1400)}
+          srcset={srcset(IMAGES.friendsDinner, [700, 1100, 1600])}
+          sizes="(min-width: 1024px) 42vw, 90vw"
+          alt="Friends sharing dinner around a restaurant table in the evening"
+          loading="lazy"
+        />
+      </div>
+
+      <div class="lift" data-lift aria-label="Zin & Gin is on the ground floor">
+        <span class="lift__label">Teleport · Lift</span>
+        <span class="lift__screen">
+          <span class="lift__arrow" aria-hidden="true">▼</span>
+          <span class="lift__floor" data-lift-floor>6</span>
+        </span>
+        <span class="lift__dest">Ground floor · Zin &amp; Gin</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const lift = document.querySelector<HTMLElement>('[data-lift]');
+  const floor = lift?.querySelector<HTMLElement>('[data-lift-floor]');
+  if (lift && floor) {
+    const floors = ['6', '5', '4', '3', '2', '1', 'G'];
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        observer.disconnect();
+        floors.forEach((value, index) =>
+          window.setTimeout(() => {
+            floor.textContent = value;
+            floor.animate([{ transform: 'translateY(-40%)', opacity: 0 }, { transform: 'none', opacity: 1 }], {
+              duration: 320,
+              easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+            });
+            if (value === 'G') lift.classList.add('is-arrived');
+          }, 300 + index * 380),
+        );
+      },
+      { threshold: 0.6 },
+    );
+    observer.observe(lift);
+  }
+</script>
+
+<style>
+  .hotel {
+    position: relative;
+    overflow: hidden;
+    padding-block: var(--section-y);
+    background:
+      radial-gradient(ellipse 60% 70% at 85% 30%, rgba(7, 93, 97, 0.9) 0%, transparent 70%),
+      var(--petrol-deep);
+  }
+  .hotel__glyph {
+    position: absolute;
+    left: -2vw;
+    bottom: -12vw;
+    font-family: var(--serif);
+    font-size: 48vw;
+    line-height: 1;
+    color: rgba(243, 235, 221, 0.035);
+    pointer-events: none;
+    user-select: none;
+  }
+  .hotel__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: clamp(3rem, 7vw, 8rem);
+    align-items: center;
+  }
+  .hotel__copy {
+    display: grid;
+    gap: 2.2rem;
+    justify-items: start;
+  }
+  .hotel__copy .h1 em {
+    color: #efe3cf;
+  }
+  .hotel__body {
+    display: grid;
+    gap: 1rem;
+  }
+  .hotel__short {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(1.6rem, 2.3vw, 2.2rem);
+    line-height: 1.15;
+    color: var(--ivory);
+  }
+  .hotel__cta {
+    display: grid;
+    gap: 1.4rem;
+    justify-items: start;
+  }
+  .hotel__note {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--on-dark-soft);
+  }
+  .hotel__note strong {
+    color: var(--ivory);
+    font-weight: 600;
+  }
+  .hotel__key {
+    position: relative;
+    width: 34px;
+    height: 22px;
+    flex: none;
+    border-radius: 4px;
+    border: 1px solid rgba(243, 235, 221, 0.4);
+  }
+  .hotel__key::after {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 5px;
+    width: 8px;
+    height: 6px;
+    border-radius: 1px;
+    background: var(--terra);
+  }
+
+  .hotel__visual {
+    position: relative;
+  }
+  .hotel__frame {
+    aspect-ratio: 4 / 5;
+    border-radius: 999px 999px 0 0;
+  }
+  .lift {
+    position: absolute;
+    left: -3.5rem;
+    bottom: 3rem;
+    display: grid;
+    gap: 0.6rem;
+    padding: 1.1rem 1.3rem 1.2rem;
+    border-radius: 16px;
+    background: rgba(4, 30, 31, 0.82);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--on-dark-faint);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.35);
+  }
+  .lift__label,
+  .lift__dest {
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--on-dark-soft);
+  }
+  .lift__dest {
+    color: var(--ivory);
+    opacity: 0.35;
+    transition: opacity 0.6s, color 0.6s;
+  }
+  .lift:global(.is-arrived) .lift__dest {
+    opacity: 1;
+    color: #f3b08e;
+  }
+  .lift__screen {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.4rem 1rem;
+    border-radius: 10px;
+    background: #031d1e;
+    font-family: var(--serif);
+    font-size: 3.4rem;
+    line-height: 1;
+    color: #f3b08e;
+    overflow: hidden;
+  }
+  .lift__arrow {
+    font-family: var(--sans);
+    font-size: 0.9rem;
+    animation: lift-blink 1s steps(2) infinite;
+  }
+  .lift:global(.is-arrived) .lift__arrow {
+    animation: none;
+    opacity: 0.25;
+  }
+  @keyframes lift-blink {
+    50% {
+      opacity: 0.2;
+    }
+  }
+  .lift__floor {
+    display: inline-block;
+    min-width: 1.2ch;
+  }
+
+  @media (max-width: 1023px) {
+    .hotel__grid {
+      grid-template-columns: 1fr;
+    }
+    .hotel__visual {
+      max-width: 520px;
+      width: 100%;
+      justify-self: end;
+    }
+    .lift {
+      left: -1rem;
+    }
+  }
+  @media (max-width: 767px) {
+    .hotel__cta .btn {
+      width: 100%;
+    }
+    .hotel__visual {
+      width: 88%;
+    }
+    .lift {
+      left: -12%;
+      bottom: 1.5rem;
+      padding: 0.9rem 1rem;
+    }
+    .lift__screen {
+      font-size: 2.6rem;
+    }
+  }
+</style>

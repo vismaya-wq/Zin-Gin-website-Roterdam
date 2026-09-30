@@ -1,0 +1,74 @@
+---
+import { IMAGES, photo, srcset } from '../data/images';
+---
+
+<section class="closing on-dark" aria-labelledby="closing-title">
+  <div class="closing__media media" aria-hidden="true">
+    <img
+      data-parallax="0.25"
+      src={photo(IMAGES.pavPlatter, 1800)}
+      srcset={srcset(IMAGES.pavPlatter)}
+      sizes="100vw"
+      alt=""
+      loading="lazy"
+    />
+  </div>
+  <div class="closing__shade" aria-hidden="true"></div>
+
+  <div class="container container--sym closing__inner">
+    <h2 id="closing-title" class="display" data-reveal="lines">
+      <span class="line"><span>One table.</span></span>
+      <span class="line"><span><em>Plenty to share.</em></span></span>
+    </h2>
+    <div class="closing__cta" data-reveal="fade">
+      <a class="btn btn--light" href="/reserve#table">Reserve a Table <span class="arrow">→</span></a>
+      <p>Zin &amp; Gin · Schiekade 730 · Rotterdam</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .closing {
+    position: relative;
+    display: grid;
+    align-items: center;
+    min-height: 110svh;
+    overflow: hidden;
+    background: #0d1414;
+  }
+  .closing__media {
+    position: absolute;
+    inset: 0;
+  }
+  .closing__shade {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 70% 60% at 50% 50%, rgba(4, 30, 31, 0.55) 0%, rgba(4, 30, 31, 0.85) 100%),
+      linear-gradient(0deg, rgba(4, 57, 59, 0.9) 0%, transparent 30%);
+  }
+  .closing__inner {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    gap: 3rem;
+    text-align: center;
+    padding-block: var(--section-y);
+  }
+  .closing__inner .display em {
+    color: #efe3cf;
+  }
+  .closing__cta {
+    display: grid;
+    justify-items: center;
+    gap: 1.5rem;
+  }
+  .closing__cta p {
+    margin: 0;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--on-dark-soft);
+  }
+</style>

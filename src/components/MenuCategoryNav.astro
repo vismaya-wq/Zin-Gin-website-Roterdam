@@ -1,0 +1,118 @@
+---
+import { CATEGORIES } from '../data/menu';
+---
+
+<nav class="catnav" aria-label="Menu categories" data-catnav>
+  <div class="catnav__inner">
+    <ul class="catnav__list" data-catnav-list>
+      {
+        CATEGORIES.map((cat, index) => (
+          <li>
+            <a href={`#${cat.id}`} data-catnav-link={cat.id} class:list={[index === 0 && 'is-active']}>
+              {cat.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</nav>
+
+<script>
+  const list = document.querySelector<HTMLElement>('[data-catnav-list]');
+  const links = new Map(
+    [...document.querySelectorAll<HTMLAnchorElement>('[data-catnav-link]')].map((link) => [link.dataset.catnavLink!, link]),
+  );
+  const sections = [...document.querySelectorAll<HTMLElement>('[data-menu-section]')];
+
+  const setActive = (id: string) => {
+    links.forEach((link, key) => {
+      const active = key === id;
+      link.classList.toggle('is-active', active);
+      if (active) {
+        link.setAttribute('aria-current', 'true');
+        if (list) {
+          const left = link.offsetLeft - list.clientWidth / 2 + link.clientWidth / 2;
+          list.scrollTo({ left, behavior: 'smooth' });
+        }
+      } else {
+        link.removeAttribute('aria-current');
+      }
+    });
+  };
+
+  const onScroll = () => {
+    const line = window.innerHeight * 0.35;
+    let current = sections[0]?.dataset.menuSection;
+    for (const section of sections) {
+      if (section.getBoundingClientRect().top <= line) current = section.dataset.menuSection;
+    }
+    if (current && !links.get(current)?.classList.contains('is-active')) setActive(current);
+  };
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+</script>
+
+<style>
+  .catnav {
+    position: sticky;
+    top: var(--nav-h);
+    z-index: 40;
+    background: rgba(251, 248, 241, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--ink-faint);
+  }
+  .catnav__inner {
+    max-width: var(--max);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+    padding-right: max(var(--gutter), calc(var(--cta-lane, 0px) - (100vw - var(--max)) / 2));
+  }
+  .catnav__list {
+    display: flex;
+    gap: 0.35rem;
+    margin: 0;
+    padding: 0.8rem 0;
+    list-style: none;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 1rem, #000 calc(100% - 2rem), transparent);
+    mask-image: linear-gradient(90deg, transparent 0, #000 1rem, #000 calc(100% - 2rem), transparent);
+  }
+  .catnav__list::-webkit-scrollbar {
+    display: none;
+  }
+  .catnav__list a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 42px;
+    padding: 0 1.1rem;
+    border-radius: 999px;
+    font-size: 0.74rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--ink-soft);
+    transition:
+      background 0.5s var(--ease-out),
+      color 0.5s var(--ease-out);
+  }
+  .catnav__list a:hover {
+    color: var(--teal);
+  }
+  .catnav__list a.is-active {
+    background: var(--petrol);
+    color: var(--ivory);
+  }
+  @media (max-width: 767px) {
+    .catnav__inner {
+      padding-inline: 0;
+    }
+    .catnav__list {
+      padding-inline: var(--gutter);
+    }
+  }
+</style>

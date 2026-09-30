@@ -1,0 +1,167 @@
+---
+import { IMAGES, photo, srcset } from '../data/images';
+---
+
+<section class="pickupb section" id="pickup-home" aria-labelledby="pickup-title">
+  <div class="container pickupb__grid">
+    <div class="pickupb__media media media--round media--hover" data-reveal="image">
+      <img
+        data-parallax="0.12"
+        src={photo(IMAGES.thaliSteel, 1400)}
+        srcset={srcset(IMAGES.thaliSteel, [700, 1100, 1600])}
+        sizes="(min-width: 1024px) 50vw, 92vw"
+        alt="A steel thali with sabzi, dal, paratha and chutney"
+        loading="lazy"
+      />
+    </div>
+
+    <div class="pickupb__copy">
+      <p class="eyebrow eyebrow--terra" data-reveal="fade">Order direct</p>
+      <h2 id="pickup-title" class="h2" data-reveal="lines">
+        <span class="line"><span>Taking dinner</span></span>
+        <span class="line"><span><em>home?</em></span></span>
+      </h2>
+      <p class="lede" data-reveal="fade">Order directly from Zin &amp; Gin and collect it when it’s ready.</p>
+
+      <div class="ticket" data-reveal="fade" aria-label="10% off pickup orders">
+        <div class="ticket__main">
+          <span class="ticket__big">10%<em>off</em></span>
+          <span class="ticket__small">Pickup orders</span>
+        </div>
+        <div class="ticket__stub" aria-hidden="true">
+          <span>Direct</span>
+          <span>from our kitchen</span>
+        </div>
+      </div>
+
+      <div class="pickupb__cta" data-reveal="fade">
+        <a class="btn" href="/reserve#pickup">Order for Pickup <span class="arrow">→</span></a>
+        <p>Fast confirmation from our team.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .pickupb {
+    background: var(--cream);
+    color: var(--petrol);
+  }
+  .pickupb__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    gap: clamp(3rem, 7vw, 8rem);
+    align-items: center;
+  }
+  .pickupb__media {
+    aspect-ratio: 5 / 6;
+  }
+  .pickupb__copy {
+    display: grid;
+    gap: 2rem;
+    justify-items: start;
+  }
+
+  .ticket {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    width: min(100%, 460px);
+    margin-block: 0.5rem;
+    background: var(--ivory);
+    border-radius: 14px;
+    color: var(--petrol);
+    transform: rotate(-2deg);
+    transition: transform 0.9s var(--ease-out);
+  }
+  .ticket:hover {
+    transform: rotate(0deg);
+  }
+  .ticket::before,
+  .ticket::after {
+    content: '';
+    position: absolute;
+    right: 128px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--cream);
+    transform: translateX(50%);
+  }
+  .ticket::before {
+    top: -11px;
+  }
+  .ticket::after {
+    bottom: -11px;
+  }
+  .ticket__main {
+    display: grid;
+    gap: 0.3rem;
+    padding: 1.6rem 1.8rem;
+  }
+  .ticket__big {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    font-family: var(--serif);
+    font-size: clamp(4.5rem, 7vw, 6.4rem);
+    line-height: 0.85;
+    letter-spacing: -0.03em;
+  }
+  .ticket__big em {
+    font-size: 0.42em;
+    letter-spacing: 0;
+    color: var(--terra);
+  }
+  .ticket__small {
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+  }
+  .ticket__stub {
+    display: grid;
+    place-content: center;
+    gap: 0.3rem;
+    width: 128px;
+    padding: 1rem;
+    border-left: 2px dashed rgba(6, 76, 79, 0.25);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-align: center;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .pickupb__cta {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .pickupb__cta p {
+    margin: 0;
+    font-size: 0.88rem;
+    color: var(--ink-soft);
+  }
+  @media (max-width: 1023px) {
+    .pickupb__grid {
+      grid-template-columns: 1fr;
+    }
+    .pickupb__media {
+      aspect-ratio: 4 / 3;
+    }
+  }
+  @media (max-width: 767px) {
+    .pickupb__cta .btn {
+      width: 100%;
+    }
+    .ticket::before,
+    .ticket::after {
+      right: 100px;
+    }
+    .ticket__stub {
+      width: 100px;
+    }
+  }
+</style>

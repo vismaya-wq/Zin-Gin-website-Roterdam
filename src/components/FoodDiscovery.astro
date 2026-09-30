@@ -1,0 +1,146 @@
+---
+import DishFeature from './DishFeature.astro';
+import { IMAGES } from '../data/images';
+
+const dishes = [
+  { name: 'Masala Dosa', line: 'Crisp. Comforting. Made for dipping.', image: IMAGES.masalaDosa, alt: 'A golden masala dosa with chutneys and sambar' },
+  { name: 'Paneer Special', line: 'Rich spices. Soft paneer. Serious comfort food.', image: IMAGES.paneerTikka, alt: 'Paneer tikka with peppers and onion on a sizzling platter' },
+  { name: 'Biryani', line: 'Fragrant rice, layered spice and a table favourite.', image: IMAGES.biryaniDark, alt: 'Vegetable biryani served in copper bowls' },
+  { name: 'Chaat & Street Favourites', line: 'Bright, tangy and difficult to stop at one.', image: IMAGES.chaat, alt: 'Chaat topped with yoghurt, chutney and sev' },
+];
+---
+
+<section class="kitchen on-dark" id="kitchen" aria-labelledby="kitchen-title" data-hscroll>
+  <div class="kitchen__track" data-hscroll-track>
+    <header class="kitchen__intro">
+      <p class="eyebrow" data-reveal="fade">From our kitchen</p>
+      <h2 id="kitchen-title" class="h1" data-reveal="lines">
+        <span class="line"><span>What are you</span></span>
+        <span class="line"><span><em>craving today?</em></span></span>
+      </h2>
+      <p class="lede" data-reveal="fade">Four places to start — the rest is on the menu.</p>
+      <a class="link-arrow" href="/menu" data-reveal="fade">See the Full Menu <span class="arrow">→</span></a>
+    </header>
+
+    {dishes.map((dish, index) => <DishFeature index={index} {...dish} />)}
+
+    <a href="/menu" class="kitchen__end" aria-label="See the full menu">
+      <span class="kitchen__end-plate">
+        <em>The full</em>
+        <span>menu</span>
+        <b aria-hidden="true">→</b>
+      </span>
+    </a>
+  </div>
+
+  <div class="kitchen__progress" aria-hidden="true"><span data-hscroll-progress></span></div>
+</section>
+
+<style>
+  .kitchen {
+    position: relative;
+    background: var(--petrol);
+    overflow: hidden;
+  }
+  .kitchen__track {
+    display: flex;
+    align-items: center;
+    gap: clamp(2.5rem, 5vw, 6rem);
+    height: 100svh;
+    padding: calc(var(--nav-h) + 2rem) var(--gutter) 4rem;
+    width: max-content;
+    will-change: transform;
+  }
+  .kitchen__intro {
+    flex: none;
+    display: grid;
+    gap: 1.75rem;
+    justify-items: start;
+    width: clamp(320px, 36vw, 600px);
+  }
+  .kitchen__intro .h1 em {
+    color: #efe3cf;
+  }
+  .kitchen__end {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: clamp(220px, 20vw, 300px);
+    aspect-ratio: 1;
+    margin-right: 10vw;
+    border-radius: 50%;
+    border: 1px solid var(--on-dark-faint);
+    transition: background 0.7s var(--ease-out), color 0.7s var(--ease-out);
+  }
+  .kitchen__end-plate {
+    display: grid;
+    justify-items: center;
+    font-family: var(--serif);
+    font-size: clamp(2rem, 2.8vw, 2.8rem);
+    line-height: 1;
+  }
+  .kitchen__end-plate b {
+    margin-top: 0.8rem;
+    font-family: var(--sans);
+    font-size: 1.3rem;
+    font-weight: 400;
+    transition: transform 0.6s var(--ease-out);
+  }
+  .kitchen__end:hover {
+    background: var(--ivory);
+    color: var(--petrol);
+  }
+  .kitchen__end:hover b {
+    transform: translateX(8px);
+  }
+  .kitchen__progress {
+    position: absolute;
+    left: var(--gutter);
+    right: var(--gutter);
+    bottom: 2.2rem;
+    height: 1px;
+    background: var(--on-dark-faint);
+  }
+  .kitchen__progress span {
+    position: absolute;
+    inset: 0;
+    background: var(--ivory);
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  @media (max-width: 1023px) {
+    .kitchen {
+      padding-block: var(--section-y);
+    }
+    .kitchen__track {
+      display: flex;
+      align-items: flex-start;
+      height: auto;
+      width: auto;
+      gap: 1.25rem;
+      padding: 0 var(--gutter) 1rem;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-padding-inline: var(--gutter);
+      scrollbar-width: none;
+      flex-wrap: nowrap;
+    }
+    .kitchen__track::-webkit-scrollbar {
+      display: none;
+    }
+    .kitchen__intro {
+      width: min(82vw, 440px);
+      align-self: center;
+      scroll-snap-align: start;
+    }
+    .kitchen__end {
+      width: 200px;
+      margin: 8rem 0 0;
+      scroll-snap-align: start;
+    }
+    .kitchen__progress {
+      display: none;
+    }
+  }
+</style>

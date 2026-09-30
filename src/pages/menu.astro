@@ -1,0 +1,379 @@
+---
+import Layout from '../layouts/Layout.astro';
+import MenuCategoryNav from '../components/MenuCategoryNav.astro';
+import MenuSection from '../components/MenuSection.astro';
+import MenuInterlude from '../components/MenuInterlude.astro';
+import UberEatsSection from '../components/UberEatsSection.astro';
+import { CATEGORIES, MENU, formatPrice, mostLoved } from '../data/menu';
+import { IMAGES, photo, srcset } from '../data/images';
+
+const loved = mostLoved();
+const category = (id: string) => CATEGORIES.find((cat) => cat.id === id)!;
+const order = CATEGORIES.filter((cat) => cat.id !== 'popular');
+const indexOf = (id: string) => order.findIndex((cat) => cat.id === id) + 1;
+---
+
+<Layout
+  title="Menu"
+  page="menu"
+  description="The Zin & Gin menu — dosa, paneer, biryani, chaat and more. Vegetarian Indian food in Rotterdam. Order direct for pickup and save 10%."
+>
+  <section class="mhero on-dark" aria-labelledby="menu-title">
+    <div class="container mhero__grid">
+      <div class="mhero__copy">
+        <p class="eyebrow" data-reveal="fade" data-immediate>The Zin &amp; Gin Menu</p>
+        <h1 id="menu-title" class="h1" data-reveal="lines" data-immediate>
+          <span class="line"><span>Start with what</span></span>
+          <span class="line"><span><em>you’re craving.</em></span></span>
+        </h1>
+        <p class="lede" data-reveal="fade" data-immediate data-delay="0.3">
+          Indian favourites, street-food classics and comforting dishes made for sharing.
+        </p>
+        <dl class="mhero__facts" data-reveal="fade" data-immediate data-delay="0.45">
+          <div><dt>{MENU.length}</dt><dd>Dishes</dd></div>
+          <div><dt>100%</dt><dd>Vegetarian</dd></div>
+          <div><dt>−10%</dt><dd>Direct pickup</dd></div>
+        </dl>
+      </div>
+      <div class="mhero__media">
+        <div class="media mhero__main" data-reveal="image" data-immediate>
+          <img
+            src={photo(IMAGES.thaliWarm, 1400)}
+            srcset={srcset(IMAGES.thaliWarm, [700, 1100, 1600])}
+            sizes="(min-width: 1024px) 46vw, 92vw"
+            alt="A vegetarian thali with puri, dal and sabzi"
+            fetchpriority="high"
+          />
+        </div>
+        <div class="media mhero__small" data-reveal="image" data-immediate data-delay="0.35">
+          <img src={photo(IMAGES.masalaDosa, 700)} alt="Masala dosa with chutneys" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="menu-body">
+    <MenuCategoryNav />
+
+    <section class="loved" id="popular" data-menu-section="popular" data-scroll-offset="66" aria-labelledby="loved-title">
+      <div class="container">
+        <header class="loved__head">
+          <p class="eyebrow eyebrow--terra" data-reveal="fade">Most loved at Zin &amp; Gin</p>
+          <h2 id="loved-title" class="h2" data-reveal="lines">
+            <span class="line"><span>The ones people</span></span>
+            <span class="line"><span><em>order again.</em></span></span>
+          </h2>
+        </header>
+
+        {
+          loved.map((item, index) => (
+            <article class:list={['feature', index % 2 === 1 && 'feature--flip']}>
+              <div class="feature__media media media--round media--hover" data-reveal="image">
+                <img
+                  data-parallax="0.12"
+                  src={photo(item.image!, 1400)}
+                  srcset={srcset(item.image!, [700, 1100, 1600])}
+                  sizes="(min-width: 1024px) 55vw, 92vw"
+                  alt={item.name}
+                  loading="lazy"
+                />
+              </div>
+              <div class="feature__copy">
+                <span class="feature__num" data-reveal="fade">0{index + 1} — Most loved</span>
+                <h3 class="h1" data-reveal="lines">
+                  <span class="line"><span>{item.name}</span></span>
+                </h3>
+                <p class="lede" data-reveal="fade">{item.description}</p>
+                <div class="feature__meta" data-reveal="fade">
+                  <span class="feature__price">{formatPrice(item.price)}</span>
+                  <span class="tags">{item.tags.map((tag) => <span class="tag">{tag}</span>)}</span>
+                </div>
+                <div data-reveal="fade">
+                  <button type="button" class="add-btn" data-add={item.id} aria-label={`Add ${item.name} to order`}>
+                    Add to Order <span class="add-btn__plus" aria-hidden="true">+</span>
+                  </button>
+                </div>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <MenuSection category={category('breakfast')} index={indexOf('breakfast')} />
+    <MenuSection category={category('street-food')} index={indexOf('street-food')} />
+
+    <MenuInterlude
+      variant="pair"
+      images={[
+        { id: IMAGES.paniPuri, alt: 'Pani puri with fillings and chutneys' },
+        { id: IMAGES.chaat, alt: 'Chaat topped with yoghurt and chutney' },
+      ]}
+      caption="Street food, the way Mumbai eats it."
+    />
+
+    <MenuSection category={category('starters')} index={indexOf('starters')} />
+    <MenuSection category={category('south-indian')} index={indexOf('south-indian')} />
+
+    <MenuInterlude
+      variant="wide"
+      images={[{ id: IMAGES.bananaLeaf, alt: 'A South Indian meal served on banana leaf' }]}
+      caption="South Indian, served generously."
+    />
+
+    <MenuSection category={category('curries')} index={indexOf('curries')} />
+
+    <section class="midcta on-dark" aria-labelledby="midcta-title">
+      <div class="container midcta__inner">
+        <div>
+          <p class="eyebrow" data-reveal="fade">Order direct · Save 10%</p>
+          <h2 id="midcta-title" class="h2" data-reveal="lines">
+            <span class="line"><span>Already found</span></span>
+            <span class="line"><span><em>your order?</em></span></span>
+          </h2>
+        </div>
+        <div class="midcta__side" data-reveal="fade">
+          <p class="lede">Get 10% off when you order directly for pickup.</p>
+          <a class="btn btn--light" href="/reserve#pickup">Start My Order <span class="arrow">→</span></a>
+        </div>
+      </div>
+    </section>
+
+    <MenuSection category={category('rice-biryani')} index={indexOf('rice-biryani')} />
+    <MenuSection category={category('breads')} index={indexOf('breads')} />
+    <MenuSection category={category('desserts')} index={indexOf('desserts')} />
+
+    <MenuInterlude
+      variant="pair"
+      images={[
+        { id: IMAGES.cocktailDark, alt: 'A gin cocktail with rosemary on a dark bar' },
+        { id: IMAGES.cocktailPour, alt: 'A cocktail being poured over ice' },
+      ]}
+      caption="And yes — the Gin in Zin & Gin."
+    />
+
+    <MenuSection category={category('drinks')} index={indexOf('drinks')} />
+  </div>
+
+  <section class="mfoot" aria-labelledby="mfoot-title">
+    <div class="container container--sym mfoot__inner">
+      <h2 id="mfoot-title" class="h1" data-reveal="lines">
+        <span class="line"><span>Not sure what</span></span>
+        <span class="line"><span><em>to choose?</em></span></span>
+      </h2>
+      <a class="btn" href="#popular" data-reveal="fade">See Our Most Popular Dishes <span class="arrow arrow--up">↑</span></a>
+    </div>
+  </section>
+
+  <UberEatsSection heading="Prefer delivery?" lines={['We’re also available on Uber Eats.']} compact />
+</Layout>
+
+<style>
+  .mhero {
+    position: relative;
+    overflow: hidden;
+    background: var(--petrol);
+    padding-top: calc(var(--nav-h) + clamp(3rem, 7vw, 6rem));
+    padding-bottom: clamp(4rem, 8vw, 7rem);
+  }
+  .mhero__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(3rem, 6vw, 6rem);
+    align-items: end;
+  }
+  .mhero__copy {
+    display: grid;
+    gap: 2rem;
+    padding-bottom: 1rem;
+  }
+  .mhero__copy .h1 {
+    font-size: clamp(2.8rem, 5.4vw, 6.2rem);
+  }
+  .mhero__copy .h1 em {
+    color: #efe3cf;
+  }
+  .mhero__main img {
+    object-position: 50% 75%;
+  }
+  .mhero__facts {
+    display: flex;
+    gap: clamp(1.5rem, 4vw, 3.5rem);
+    margin: 1rem 0 0;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--on-dark-faint);
+  }
+  .mhero__facts dt {
+    font-family: var(--serif);
+    font-size: clamp(2rem, 3vw, 2.8rem);
+    line-height: 1;
+  }
+  .mhero__facts dd {
+    margin: 0.4rem 0 0;
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--on-dark-soft);
+  }
+  .mhero__media {
+    position: relative;
+  }
+  .mhero__main {
+    aspect-ratio: 4 / 5;
+    max-height: 76vh;
+    width: 100%;
+    border-radius: 999px 999px var(--radius-lg) var(--radius-lg);
+  }
+  .mhero__small {
+    position: absolute;
+    left: -14%;
+    bottom: 8%;
+    width: 36%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 6px solid var(--petrol);
+  }
+
+  .menu-body {
+    position: relative;
+  }
+
+  .loved {
+    padding-block: clamp(5rem, 10vw, 9rem);
+  }
+  .loved__head {
+    display: grid;
+    gap: 1.5rem;
+    margin-bottom: clamp(3rem, 7vw, 6rem);
+    color: var(--petrol);
+  }
+  .feature {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+    gap: clamp(2rem, 6vw, 6rem);
+    align-items: center;
+    margin-bottom: clamp(5rem, 10vw, 9rem);
+  }
+  .feature:last-child {
+    margin-bottom: 0;
+  }
+  .feature--flip {
+    grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
+  }
+  .feature--flip .feature__media {
+    order: 2;
+  }
+  .feature__media {
+    aspect-ratio: 5 / 4;
+  }
+  .feature--flip .feature__media {
+    aspect-ratio: 4 / 5;
+    max-width: 640px;
+    justify-self: end;
+    width: 100%;
+    border-radius: 999px 999px var(--radius-lg) var(--radius-lg);
+  }
+  .feature__copy {
+    display: grid;
+    gap: 1.5rem;
+    justify-items: start;
+    color: var(--petrol);
+  }
+  .feature__copy .h1 {
+    font-size: clamp(2.8rem, 5.2vw, 5.6rem);
+  }
+  .feature__num {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--terra);
+  }
+  .feature__meta {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+  }
+  .feature__price {
+    font-family: var(--serif);
+    font-size: 2.2rem;
+    line-height: 1;
+  }
+  .feature .tags {
+    color: var(--teal);
+  }
+
+  .midcta {
+    margin-block: clamp(2rem, 5vw, 4rem) clamp(5rem, 9vw, 8rem);
+    background: var(--teal);
+    padding-block: clamp(4rem, 8vw, 7rem);
+  }
+  .midcta__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    gap: 3rem;
+    align-items: end;
+  }
+  .midcta .h2 em {
+    color: #efe3cf;
+  }
+  .midcta .eyebrow {
+    margin-bottom: 1.5rem;
+  }
+  .midcta__side {
+    display: grid;
+    gap: 1.75rem;
+    justify-items: start;
+  }
+
+  .mfoot {
+    padding-block: clamp(6rem, 12vw, 10rem) clamp(4rem, 8vw, 6rem);
+    background: var(--cream);
+    border-top: 1px solid var(--ink-faint);
+  }
+  .mfoot__inner {
+    display: grid;
+    justify-items: center;
+    gap: 2.5rem;
+    text-align: center;
+    color: var(--petrol);
+  }
+
+  @media (max-width: 1023px) {
+    .mhero__grid,
+    .feature,
+    .feature--flip,
+    .midcta__inner {
+      grid-template-columns: 1fr;
+    }
+    .mhero__media {
+      width: 86%;
+      justify-self: end;
+    }
+    .feature--flip .feature__media {
+      order: 0;
+      justify-self: stretch;
+      max-width: none;
+      aspect-ratio: 5 / 4;
+      border-radius: var(--radius-lg);
+    }
+  }
+  @media (max-width: 767px) {
+    .mhero__main {
+      max-height: 62vh;
+    }
+    .mhero__small {
+      left: -10%;
+    }
+    .midcta__side .btn,
+    .mfoot .btn {
+      width: 100%;
+    }
+    .mfoot .btn {
+      white-space: normal;
+      text-align: center;
+      padding-block: 1rem;
+    }
+  }
+</style>

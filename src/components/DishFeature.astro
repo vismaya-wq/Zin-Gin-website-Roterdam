@@ -1,0 +1,107 @@
+---
+import { photo, srcset } from '../data/images';
+
+interface Props {
+  index: number;
+  name: string;
+  line: string;
+  image: string;
+  alt: string;
+}
+
+const { index, name, line, image, alt } = Astro.props;
+---
+
+<article class:list={['dish', index % 2 === 1 && 'dish--low']} data-hscroll-item>
+  <a href="/menu" class="dish__link" aria-label={`${name} — see it on the menu`}>
+    <div class="dish__media media media--hover">
+      <img
+        src={photo(image, 1100)}
+        srcset={srcset(image, [600, 1000, 1400])}
+        sizes="(min-width: 1024px) 34vw, 78vw"
+        alt={alt}
+        loading="lazy"
+      />
+    </div>
+    <div class="dish__text">
+      <span class="dish__num">0{index + 1}</span>
+      <h3 class="dish__name">{name}</h3>
+      <p class="dish__line">{line}</p>
+    </div>
+  </a>
+</article>
+
+<style>
+  .dish {
+    flex: none;
+    width: clamp(300px, 31vw, 540px);
+  }
+  .dish--low {
+    padding-top: 9vh;
+  }
+  .dish__link {
+    display: block;
+  }
+  .dish__media {
+    height: min(58vh, 620px);
+    border-radius: var(--radius-lg);
+  }
+  .dish__media img {
+    width: 112%;
+    max-width: none;
+    margin-left: -6%;
+  }
+  .dish--low .dish__media {
+    height: min(50vh, 540px);
+    border-radius: 999px 999px var(--radius-lg) var(--radius-lg);
+  }
+  .dish__text {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 1.25rem;
+    padding-top: 1.5rem;
+  }
+  .dish__num {
+    grid-row: span 2;
+    padding-top: 0.6rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    color: var(--terra);
+  }
+  .dish__name {
+    margin: 0;
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(2rem, 3vw, 3rem);
+    line-height: 1;
+    transition: transform 0.7s var(--ease-out);
+  }
+  .dish__link:hover .dish__name {
+    transform: translateX(8px);
+  }
+  .dish__line {
+    margin: 0.6rem 0 0;
+    color: var(--on-dark-soft);
+  }
+  @media (max-width: 1023px) {
+    .dish {
+      width: min(78vw, 420px);
+      scroll-snap-align: start;
+    }
+    .dish--low {
+      padding-top: 3rem;
+    }
+    .dish__media {
+      height: 56vh;
+      max-height: 520px;
+    }
+    .dish--low .dish__media {
+      height: 48vh;
+    }
+    .dish__media img {
+      width: 100%;
+      margin-left: 0;
+    }
+  }
+</style>

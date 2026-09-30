@@ -1,0 +1,167 @@
+---
+import { IMAGES, photo, srcset } from '../data/images';
+import { SITE } from '../data/site';
+---
+
+<section class="discover section" id="find" aria-labelledby="discover-title">
+  <span id="story" class="anchor" aria-hidden="true"></span>
+  <div class="container discover__grid">
+    <div class="discover__copy">
+      <p class="eyebrow eyebrow--terra" data-reveal="fade">You’re closer than you think.</p>
+      <h2 id="discover-title" class="h2" data-reveal="lines">
+        <span class="line"><span>Hidden inside</span></span>
+        <span class="line"><span>Teleport.</span></span>
+        <span class="line"><span><em>Worth finding.</em></span></span>
+      </h2>
+      <p class="lede" data-reveal="fade">
+        Whether you’re staying at the hotel, working nearby or simply looking for good Indian food in Rotterdam, Zin
+        &amp; Gin is right here.
+      </p>
+      <div class="discover__where" data-reveal="fade">
+        <dl>
+          <div><dt>Address</dt><dd>{SITE.street}, {SITE.postcode} {SITE.city}</dd></div>
+          <div><dt>Find the door</dt><dd>Ground floor · Teleport Hotel lobby</dd></div>
+        </dl>
+        <a class="link-arrow" href={SITE.mapsUrl} target="_blank" rel="noopener">
+          Get Directions <span class="arrow">→</span>
+        </a>
+      </div>
+    </div>
+
+    <figure class="discover__interior">
+      <div class="media media--round" data-reveal="image">
+        <img
+          data-parallax="0.14"
+          src={photo(IMAGES.interiorMoody, 1400)}
+          srcset={srcset(IMAGES.interiorMoody, [700, 1100, 1600])}
+          sizes="(min-width: 1024px) 45vw, 92vw"
+          alt="The dining room at Zin & Gin, warm and low-lit in the evening"
+          loading="lazy"
+        />
+      </div>
+      <figcaption>Evenings at Schiekade 730</figcaption>
+    </figure>
+
+    <figure class="discover__food" data-drift="50">
+      <div class="media" data-reveal="image" data-delay="0.2">
+        <img
+          src={photo(IMAGES.samosa, 900)}
+          srcset={srcset(IMAGES.samosa, [500, 900, 1200])}
+          sizes="(min-width: 1024px) 24vw, 60vw"
+          alt="Crisp samosas with green chilli and chutney"
+          loading="lazy"
+        />
+      </div>
+    </figure>
+  </div>
+</section>
+
+<style>
+  .discover {
+    position: relative;
+    background: var(--cream);
+  }
+  .anchor {
+    position: absolute;
+    top: 0;
+  }
+  .discover__grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-template-rows: auto auto;
+    column-gap: clamp(1rem, 2vw, 2rem);
+  }
+  .discover__copy {
+    grid-column: 1 / span 5;
+    grid-row: 1 / span 2;
+    display: grid;
+    align-content: start;
+    gap: 2rem;
+    padding-top: clamp(1rem, 6vw, 6rem);
+    color: var(--petrol);
+  }
+  .discover__where {
+    display: grid;
+    gap: 1.5rem;
+    justify-items: start;
+    margin-top: 1rem;
+  }
+  .discover__where dl {
+    display: grid;
+    gap: 0.9rem;
+    margin: 0;
+    width: 100%;
+    max-width: 26rem;
+  }
+  .discover__where dl div {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid var(--ink-faint);
+    font-size: 0.9rem;
+  }
+  .discover__where dt {
+    color: var(--ink-soft);
+  }
+  .discover__where dd {
+    margin: 0;
+    font-weight: 600;
+    text-align: right;
+  }
+  .discover__interior {
+    grid-column: 8 / span 5;
+    grid-row: 1;
+    margin: 0;
+  }
+  .discover__interior .media {
+    aspect-ratio: 4 / 5;
+    border-radius: 999px 999px var(--radius-lg) var(--radius-lg);
+  }
+  .discover__interior figcaption {
+    margin-top: 1rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-align: right;
+    color: var(--ink-soft);
+  }
+  .discover__food {
+    grid-column: 6 / span 3;
+    grid-row: 1;
+    align-self: end;
+    margin: 0 0 -4rem;
+    z-index: 2;
+  }
+  .discover__food .media {
+    aspect-ratio: 3 / 4;
+    box-shadow: 0 30px 60px rgba(4, 57, 59, 0.25);
+  }
+  @media (max-width: 1023px) {
+    .discover__grid {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      row-gap: 3rem;
+    }
+    .discover__copy {
+      grid-column: 1 / -1;
+      grid-row: auto;
+      padding-top: 0;
+    }
+    .discover__interior {
+      grid-column: 2 / -1;
+      grid-row: auto;
+    }
+    .discover__food {
+      grid-column: 1 / span 3;
+      grid-row: auto;
+      margin: -12rem 0 0;
+    }
+  }
+  @media (max-width: 767px) {
+    .discover__food {
+      grid-column: 1 / span 4;
+      margin-top: -8rem;
+    }
+  }
+</style>

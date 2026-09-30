@@ -1,0 +1,91 @@
+---
+import { SITE } from '../data/site';
+
+interface Props {
+  heading?: string;
+  lines?: string[];
+  compact?: boolean;
+}
+
+const {
+  heading = 'Rather stay where you are?',
+  lines = ['Zin & Gin is also on Uber Eats.', 'Get your favourites delivered to your door.'],
+  compact = false,
+} = Astro.props;
+---
+
+<section class:list={['uber', compact && 'uber--compact']} aria-label="Delivery through Uber Eats">
+  <div class="container">
+    <div class="uber__row" data-reveal="fade">
+      <span class="uber__mark" aria-hidden="true">
+        <span>Uber</span>
+        <b>Eats</b>
+      </span>
+      <div class="uber__copy">
+        <h2 class="h3">{heading}</h2>
+        <p>{lines.join(' ')}</p>
+      </div>
+      <a class="link-arrow" href={SITE.uberEatsUrl} target="_blank" rel="noopener">
+        Order on Uber Eats <span class="arrow arrow--diag">↗</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .uber {
+    background: var(--cream);
+    padding-bottom: clamp(5rem, 9vw, 8rem);
+  }
+  .uber--compact {
+    padding-block: 0 clamp(4rem, 7vw, 6rem);
+  }
+  .uber__row {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: clamp(1.5rem, 4vw, 3.5rem);
+    padding: clamp(1.75rem, 3vw, 2.5rem) 0;
+    border-top: 1px solid var(--ink-faint);
+    border-bottom: 1px solid var(--ink-faint);
+    color: var(--petrol);
+  }
+  .uber__mark {
+    display: grid;
+    place-content: center;
+    width: 84px;
+    height: 84px;
+    border-radius: 20px;
+    background: #000;
+    color: #fff;
+    font-family: var(--sans);
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1;
+    text-align: left;
+    letter-spacing: -0.01em;
+  }
+  .uber__mark b {
+    color: #06c167;
+    font-weight: 700;
+  }
+  .uber__copy p {
+    margin: 0.5rem 0 0;
+    color: var(--ink-soft);
+  }
+  @media (max-width: 767px) {
+    .uber__row {
+      grid-template-columns: auto 1fr;
+    }
+    .uber__mark {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      font-size: 0.85rem;
+    }
+    .uber__row .link-arrow {
+      grid-column: 1 / -1;
+      justify-self: start;
+    }
+  }
+</style>

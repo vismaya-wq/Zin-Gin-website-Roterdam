@@ -1,0 +1,100 @@
+---
+import '../styles/global.css';
+import '../styles/interactive.css';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import FloatingFoodCTA from '../components/FloatingFoodCTA.tsx';
+import OrderDrawer from '../components/OrderDrawer.tsx';
+
+export type PageKey = 'home' | 'menu' | 'reserve';
+
+interface Props {
+  title: string;
+  description: string;
+  page: PageKey;
+  navTone?: 'light' | 'dark';
+}
+
+const { title, description, page, navTone = 'light' } = Astro.props;
+const fullTitle = page === 'home' ? `Zin & Gin · Vegetarian Indian Restaurant & Bar · Rotterdam` : `${title} · Zin & Gin Rotterdam`;
+---
+
+<!doctype html>
+<html lang="en" class="js-motion">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#064C4F" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://images.unsplash.com" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Manrope:wght@400;500;600;700&display=swap"
+    />
+    <script is:inline>
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.classList.remove('js-motion');
+      }
+    </script>
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Restaurant',
+        name: 'Zin & Gin',
+        servesCuisine: ['Indian', 'Vegetarian'],
+        address: {
+          '@type': 'PostalAddress',
+          streetAddress: 'Schiekade 730',
+          postalCode: '3032 AL',
+          addressLocality: 'Rotterdam',
+          addressCountry: 'NL',
+        },
+        acceptsReservations: true,
+      })}
+    />
+  </head>
+  <body data-page={page}>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Navbar tone={navTone} current={page} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <FloatingFoodCTA client:load page={page} />
+    <OrderDrawer client:load />
+
+    <script>
+      import { initMotion } from '../lib/motion';
+      import { $cart, addItem, hydrateCart } from '../lib/cart';
+
+      hydrateCart();
+      initMotion();
+
+      document.addEventListener('click', (event) => {
+        const button = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-add]');
+        if (!button) return;
+        addItem(button.dataset.add!);
+        button.classList.remove('is-added');
+        void button.offsetWidth;
+        button.classList.add('is-added');
+        window.setTimeout(() => button.classList.remove('is-added'), 1400);
+      });
+
+      $cart.subscribe((lines) => {
+        document.querySelectorAll<HTMLElement>('[data-add]').forEach((button) => {
+          const qty = lines[button.dataset.add!] ?? 0;
+          button.dataset.qty = String(qty);
+          button.classList.toggle('has-qty', qty > 0);
+        });
+      });
+    </script>
+  </body>
+</html>

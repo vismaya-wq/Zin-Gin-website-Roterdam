@@ -1,0 +1,450 @@
+:root {
+  --teal: #075d61;
+  --petrol: #064c4f;
+  --petrol-deep: #04393b;
+  --ivory: #f3ebdd;
+  --cream: #fbf8f1;
+  --terra: #c7653c;
+  --charcoal: #171717;
+  --white: #ffffff;
+
+  --ink: var(--charcoal);
+  --ink-soft: rgba(23, 23, 23, 0.66);
+  --ink-faint: rgba(23, 23, 23, 0.14);
+  --on-dark: var(--ivory);
+  --on-dark-soft: rgba(243, 235, 221, 0.7);
+  --on-dark-faint: rgba(243, 235, 221, 0.16);
+
+  --serif: 'Cormorant Garamond', 'Cormorant', Georgia, 'Times New Roman', serif;
+  --sans: 'Manrope', 'Helvetica Neue', Arial, sans-serif;
+
+  --gutter: clamp(1.25rem, 4vw, 4rem);
+  --max: 1440px;
+  --nav-h: 84px;
+  --section-y: clamp(6rem, 13vw, 12rem);
+  --radius: 4px;
+  --radius-lg: 18px;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+@media (max-width: 767px) {
+  :root {
+    --nav-h: 68px;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: clip;
+}
+
+body {
+  margin: 0;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  font-variant-numeric: lining-nums;
+  overflow-x: clip;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--terra);
+  outline-offset: 3px;
+}
+
+::selection {
+  background: var(--teal);
+  color: var(--ivory);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: fixed;
+  left: 1rem;
+  top: -4rem;
+  z-index: 200;
+  padding: 0.75rem 1.25rem;
+  background: var(--teal);
+  color: var(--ivory);
+  border-radius: 999px;
+  transition: top 0.3s var(--ease-out);
+}
+.skip-link:focus {
+  top: 1rem;
+}
+
+/* ---------- Layout ---------- */
+
+.container {
+  width: 100%;
+  max-width: var(--max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* Keep a lane free for the floating plate CTA when it can't sit in the page margin. */
+@media (min-width: 768px) {
+  :root {
+    --cta-lane: 176px;
+  }
+  .container {
+    padding-right: max(var(--gutter), calc(var(--cta-lane) - (100vw - var(--max)) / 2));
+  }
+  .container--sym {
+    padding-left: max(var(--gutter), calc(var(--cta-lane) - (100vw - var(--max)) / 2));
+  }
+}
+@media (min-width: 1280px) {
+  :root {
+    --cta-lane: 200px;
+  }
+}
+
+.section {
+  padding-block: var(--section-y);
+}
+
+/* ---------- Type ---------- */
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+.eyebrow::before {
+  content: '';
+  width: 28px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.6;
+}
+.eyebrow--plain::before {
+  display: none;
+}
+.eyebrow--terra {
+  color: var(--terra);
+}
+
+.display,
+.h1,
+.h2,
+.h3 {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  letter-spacing: -0.015em;
+}
+
+.display {
+  font-size: clamp(3.1rem, 8.4vw, 9.25rem);
+  line-height: 0.92;
+}
+
+.h1 {
+  font-size: clamp(2.8rem, 6.6vw, 7rem);
+  line-height: 0.95;
+}
+
+.h2 {
+  font-size: clamp(2.4rem, 5vw, 5.2rem);
+  line-height: 0.98;
+}
+
+.h3 {
+  font-size: clamp(1.7rem, 2.6vw, 2.6rem);
+  line-height: 1.05;
+}
+
+.display em,
+.h1 em,
+.h2 em,
+.h3 em {
+  font-style: italic;
+}
+
+.lede {
+  margin: 0;
+  max-width: 34rem;
+  font-size: clamp(1.02rem, 1.25vw, 1.2rem);
+  line-height: 1.65;
+  color: var(--ink-soft);
+}
+.on-dark .lede,
+.lede--light {
+  color: var(--on-dark-soft);
+}
+
+.on-dark {
+  color: var(--on-dark);
+}
+
+/* Masked line reveal: each line is .line > span */
+.line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+.line > span {
+  display: block;
+  will-change: transform;
+}
+
+/* ---------- Buttons & links ---------- */
+
+.btn {
+  --btn-bg: var(--teal);
+  --btn-fg: var(--ivory);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  min-height: 56px;
+  padding: 0 1.9rem;
+  border-radius: 999px;
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  isolation: isolate;
+  transition: color 0.5s var(--ease-out), transform 0.5s var(--ease-out);
+}
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--btn-hover, var(--petrol-deep));
+  border-radius: inherit;
+  transform: translateY(101%);
+  transition: transform 0.6s var(--ease-out);
+}
+.btn:hover::after {
+  transform: translateY(0);
+}
+.btn .arrow {
+  display: inline-block;
+  transition: transform 0.5s var(--ease-out);
+}
+.btn:hover .arrow {
+  transform: translateX(5px);
+}
+.btn:hover .arrow--up {
+  transform: translateY(-4px);
+}
+.btn:hover .arrow--diag {
+  transform: translate(3px, -3px);
+}
+
+.btn--light {
+  --btn-bg: var(--ivory);
+  --btn-fg: var(--petrol);
+  --btn-hover: var(--white);
+}
+.btn--ghost {
+  --btn-bg: transparent;
+  --btn-fg: currentColor;
+  --btn-hover: rgba(7, 93, 97, 0.08);
+  box-shadow: inset 0 0 0 1px currentColor;
+}
+.on-dark .btn--ghost,
+.btn--ghost-light {
+  --btn-hover: rgba(243, 235, 221, 0.12);
+}
+.btn--terra {
+  --btn-bg: var(--terra);
+  --btn-fg: var(--white);
+  --btn-hover: #a9522f;
+}
+.btn--block {
+  width: 100%;
+}
+.btn[disabled] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.btn[disabled]::after {
+  display: none;
+}
+
+.link-arrow {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding-block: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.link-arrow::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: currentColor;
+  transform-origin: right;
+  transition: transform 0.6s var(--ease-out);
+}
+.link-arrow:hover::after {
+  transform: scaleX(0);
+  transform-origin: left;
+}
+.link-arrow .arrow {
+  transition: transform 0.5s var(--ease-out);
+}
+.link-arrow:hover .arrow {
+  transform: translateX(5px);
+}
+.link-arrow:hover .arrow--diag {
+  transform: translate(3px, -3px);
+}
+
+/* ---------- Media ---------- */
+
+.media {
+  position: relative;
+  overflow: hidden;
+  background: var(--petrol);
+}
+.media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.media--round {
+  border-radius: var(--radius-lg);
+}
+.media--hover img {
+  transition: transform 1.4s var(--ease-out);
+}
+.media--hover:hover img {
+  transform: scale(1.045);
+}
+
+/* Parallax images sit taller than their frame so they can travel. */
+[data-parallax] {
+  position: absolute;
+  inset: -9% 0;
+  height: 118% !important;
+}
+
+/* ---------- Dietary tags ---------- */
+
+.tags {
+  display: inline-flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+.tag {
+  display: inline-block;
+  padding: 0.12rem 0.45rem;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  line-height: 1.4;
+  opacity: 0.6;
+}
+
+/* ---------- Reveal initial states (only when JS motion is active) ---------- */
+
+.js-motion [data-reveal='lines'] .line > span {
+  transform: translateY(110%);
+}
+.js-motion [data-reveal='fade']:not(.is-revealed) {
+  opacity: 0;
+  transform: translateY(28px);
+}
+.js-motion [data-reveal='image'] {
+  clip-path: inset(100% 0 0 0);
+}
+.js-motion [data-reveal='image'] img {
+  transform: scale(1.18);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

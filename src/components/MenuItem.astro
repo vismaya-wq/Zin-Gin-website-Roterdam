@@ -1,0 +1,71 @@
+---
+import { formatPrice, type MenuItem } from '../data/menu';
+
+interface Props {
+  item: MenuItem;
+}
+
+const { item } = Astro.props;
+---
+
+<li class="mi" data-reveal="fade">
+  <div class="mi__text">
+    <div class="mi__head">
+      <h3 class="mi__name">{item.name}</h3>
+      <span class="mi__rule" aria-hidden="true"></span>
+      <span class="mi__price">{formatPrice(item.price)}</span>
+    </div>
+    <p class="mi__desc">{item.description}</p>
+    <span class="tags" aria-label="Dietary information">
+      {item.tags.map((tag) => <span class="tag">{tag}</span>)}
+    </span>
+  </div>
+  <button type="button" class="add-dot" data-add={item.id} aria-label={`Add ${item.name} to order`}>
+    <span aria-hidden="true">+</span>
+  </button>
+</li>
+
+<style>
+  .mi {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: start;
+    gap: 1.5rem;
+    padding: 1.6rem 0;
+    border-bottom: 1px solid var(--ink-faint);
+  }
+  .mi__head {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+  }
+  .mi__name {
+    margin: 0;
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(1.55rem, 2.2vw, 2.1rem);
+    line-height: 1.05;
+    color: var(--petrol);
+  }
+  .mi__rule {
+    flex: 1;
+    min-width: 1.5rem;
+    border-bottom: 1px dotted rgba(6, 76, 79, 0.35);
+    transform: translateY(-0.3rem);
+  }
+  .mi__price {
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .mi__desc {
+    margin: 0.45rem 0 0.7rem;
+    max-width: 36rem;
+    color: var(--ink-soft);
+  }
+  .mi .tags {
+    color: var(--teal);
+  }
+  .mi .add-dot {
+    margin-top: 0.1rem;
+  }
+</style>

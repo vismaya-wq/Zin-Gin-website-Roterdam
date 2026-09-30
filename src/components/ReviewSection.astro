@@ -1,0 +1,141 @@
+---
+import { SITE } from '../data/site';
+
+const quotes = [
+  'Fresh, beautifully presented and full of flavour.',
+  'A warm place to relax and enjoy a meal.',
+  'Great variety, easy ordering and consistently good food.',
+];
+---
+
+<section class="reviews section" aria-labelledby="reviews-title">
+  <div class="container reviews__grid">
+    <div class="reviews__score">
+      <p class="eyebrow eyebrow--terra" data-reveal="fade">Google reviews</p>
+      <p class="reviews__num" data-reveal="lines" aria-label={`Rated ${SITE.rating} out of 5`}>
+        <span class="line"><span>{SITE.rating.toFixed(1)}</span></span>
+      </p>
+      <p class="reviews__stars" aria-hidden="true" data-reveal="fade">★★★★★</p>
+      <p class="reviews__count" data-reveal="fade">{SITE.reviewCount} Google reviews</p>
+    </div>
+
+    <div class="reviews__body">
+      <h2 id="reviews-title" class="h2" data-reveal="lines">
+        <span class="line"><span>Rotterdam seems</span></span>
+        <span class="line"><span><em>to like us.</em></span></span>
+      </h2>
+
+      <ul class="quotes">
+        {
+          quotes.map((quote, index) => (
+            <li data-reveal="fade" data-delay={String(index * 0.1)}>
+              <blockquote>
+                <p>“{quote}”</p>
+              </blockquote>
+              <span class="quotes__meta">
+                <span aria-hidden="true">★★★★★</span> Google review
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+
+      <a class="link-arrow" href={SITE.reviewsUrl} target="_blank" rel="noopener" data-reveal="fade">
+        Read Our Reviews <span class="arrow">→</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .reviews {
+    background: var(--ivory);
+    color: var(--petrol);
+  }
+  .reviews__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr);
+    gap: clamp(3rem, 8vw, 9rem);
+    align-items: start;
+  }
+  .reviews__score {
+    position: sticky;
+    top: calc(var(--nav-h) + 3rem);
+  }
+  .reviews__num {
+    margin: 1rem 0 0;
+    font-family: var(--serif);
+    font-size: clamp(9rem, 20vw, 19rem);
+    font-weight: 400;
+    line-height: 0.82;
+    letter-spacing: -0.04em;
+  }
+  .reviews__stars {
+    margin: 1.2rem 0 0.4rem;
+    font-size: clamp(1.4rem, 2.2vw, 2rem);
+    letter-spacing: 0.25em;
+    color: var(--terra);
+  }
+  .reviews__count {
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .reviews__body {
+    display: grid;
+    gap: 3rem;
+    justify-items: start;
+    padding-top: 2rem;
+  }
+  .quotes {
+    display: grid;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .quotes li {
+    padding: 2rem 0;
+    border-top: 1px solid rgba(6, 76, 79, 0.18);
+  }
+  .quotes li:last-child {
+    border-bottom: 1px solid rgba(6, 76, 79, 0.18);
+  }
+  .quotes blockquote {
+    margin: 0;
+  }
+  .quotes p {
+    margin: 0;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(1.7rem, 2.8vw, 2.7rem);
+    line-height: 1.12;
+  }
+  .quotes__meta {
+    display: inline-flex;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .quotes__meta span {
+    color: var(--terra);
+    letter-spacing: 0.1em;
+  }
+  @media (max-width: 1023px) {
+    .reviews__grid {
+      grid-template-columns: 1fr;
+    }
+    .reviews__score {
+      position: static;
+    }
+    .reviews__body {
+      padding-top: 0;
+    }
+  }
+</style>

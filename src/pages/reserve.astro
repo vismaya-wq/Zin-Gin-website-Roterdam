@@ -1,0 +1,257 @@
+---
+import Layout from '../layouts/Layout.astro';
+import JoinPanel from '../components/JoinPanel.tsx';
+import { IMAGES, photo, srcset } from '../data/images';
+import { SITE } from '../data/site';
+---
+
+<Layout
+  title="Reserve or Order"
+  page="reserve"
+  navTone="dark"
+  description="Reserve a table at Zin & Gin inside Teleport Hotel Rotterdam, order direct for pickup with 10% off, or get delivery through Uber Eats."
+>
+  <section class="rhero" aria-labelledby="reserve-title">
+    <div class="container">
+      <header class="rhero__head">
+        <p class="eyebrow eyebrow--terra" data-reveal="fade" data-immediate>Your table. Your order. Your way.</p>
+        <h1 id="reserve-title" class="h1" data-reveal="lines" data-immediate>
+          <span class="line"><span>How are you</span></span>
+          <span class="line"><span><em>joining us today?</em></span></span>
+        </h1>
+      </header>
+
+      <div class="options">
+        <a class="opt opt--dine" href="#table" data-reveal="fade" data-immediate data-delay="0.3">
+          <div class="opt__media media">
+            <img
+              src={photo(IMAGES.interiorWarm, 1100)}
+              srcset={srcset(IMAGES.interiorWarm, [600, 1000, 1400])}
+              sizes="(min-width: 1024px) 38vw, 92vw"
+              alt="The Zin & Gin dining room"
+            />
+          </div>
+          <div class="opt__body">
+            <span class="opt__num">01</span>
+            <h2 class="h2">Stay for dinner.</h2>
+            <p>Enjoy Zin &amp; Gin at the restaurant.</p>
+            <span class="opt__cta">Reserve a Table <span class="arrow">→</span></span>
+            <span class="opt__meta">Inside Teleport Hotel · Rotterdam</span>
+          </div>
+        </a>
+
+        <a class="opt opt--pickup" href="#pickup" data-reveal="fade" data-immediate data-delay="0.42">
+          <div class="opt__media media">
+            <img
+              src={photo(IMAGES.samosa, 1100)}
+              srcset={srcset(IMAGES.samosa, [600, 1000, 1400])}
+              sizes="(min-width: 1024px) 38vw, 92vw"
+              alt="Crisp samosas with green chutney"
+            />
+            <span class="opt__badge">Save 10%</span>
+          </div>
+          <div class="opt__body">
+            <span class="opt__num">02</span>
+            <h2 class="h2">Pick it up.</h2>
+            <p>Order directly from our kitchen and collect it when it’s ready.</p>
+            <span class="opt__cta">Order for Pickup <span class="arrow">→</span></span>
+            <span class="opt__meta">Our team will confirm your order.</span>
+          </div>
+        </a>
+
+        <a class="opt opt--delivery" href={SITE.uberEatsUrl} target="_blank" rel="noopener" data-reveal="fade" data-immediate data-delay="0.54">
+          <div class="opt__body">
+            <span class="opt__num">03</span>
+            <span class="opt__uber" aria-hidden="true"><span>Uber</span> <b>Eats</b></span>
+            <h2 class="h3">Want it delivered?</h2>
+            <p>Get Zin &amp; Gin delivered through Uber Eats.</p>
+            <span class="opt__cta">Order on Uber Eats <span class="arrow arrow--diag">↗</span></span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="joinsec" aria-label="Reserve a table or order for pickup">
+    <span id="table" class="joinsec__anchor"></span>
+    <span id="pickup" class="joinsec__anchor"></span>
+    <div class="container">
+      <JoinPanel client:load />
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .rhero {
+    padding-top: calc(var(--nav-h) + clamp(3rem, 7vw, 6rem));
+    padding-bottom: clamp(4rem, 8vw, 7rem);
+    background: var(--cream);
+  }
+  .rhero__head {
+    display: grid;
+    gap: 1.75rem;
+    margin-bottom: clamp(3rem, 6vw, 5rem);
+    color: var(--petrol);
+  }
+  .options {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 0.62fr);
+    gap: clamp(1rem, 2vw, 1.75rem);
+    align-items: stretch;
+  }
+  .opt {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--white);
+    box-shadow: 0 1px 0 var(--ink-faint);
+    color: var(--petrol);
+    transition:
+      transform 0.8s var(--ease-out),
+      box-shadow 0.8s var(--ease-out);
+  }
+  .opt:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 30px 60px rgba(4, 57, 59, 0.14);
+  }
+  .opt__media {
+    position: relative;
+    aspect-ratio: 16 / 10;
+  }
+  .opt__media img {
+    transition: transform 1.4s var(--ease-out);
+  }
+  .opt:hover .opt__media img {
+    transform: scale(1.05);
+  }
+  .opt__badge {
+    position: absolute;
+    top: 1.1rem;
+    left: 1.1rem;
+    padding: 0.5rem 0.95rem;
+    border-radius: 999px;
+    background: var(--terra);
+    color: var(--white);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .opt__body {
+    display: grid;
+    gap: 0.9rem;
+    align-content: start;
+    flex: 1;
+    padding: clamp(1.5rem, 2.5vw, 2.25rem);
+  }
+  .opt__body p {
+    margin: 0;
+    color: var(--ink-soft);
+  }
+  .opt .h2 {
+    font-size: clamp(2.1rem, 3.1vw, 3.2rem);
+  }
+  .opt__num {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: var(--terra);
+  }
+  .opt__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 0.75rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--teal);
+  }
+  .opt__cta .arrow {
+    transition: transform 0.5s var(--ease-out);
+  }
+  .opt:hover .opt__cta .arrow {
+    transform: translateX(6px);
+  }
+  .opt:hover .opt__cta .arrow--diag {
+    transform: translate(3px, -3px);
+  }
+  .opt__meta {
+    padding-top: 1rem;
+    border-top: 1px solid var(--ink-faint);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .opt--pickup {
+    background: var(--petrol);
+    color: var(--ivory);
+  }
+  .opt--pickup .opt__body p,
+  .opt--pickup .opt__meta {
+    color: var(--on-dark-soft);
+  }
+  .opt--pickup .opt__meta {
+    border-color: var(--on-dark-faint);
+  }
+  .opt--pickup .opt__cta {
+    color: var(--ivory);
+  }
+  .opt--delivery {
+    background: transparent;
+    box-shadow: inset 0 0 0 1px var(--ink-faint);
+    align-self: end;
+  }
+  .opt--delivery:hover {
+    box-shadow: inset 0 0 0 1px var(--ink-faint), 0 20px 40px rgba(4, 57, 59, 0.08);
+  }
+  .opt__uber {
+    display: inline-grid;
+    place-content: center;
+    width: 64px;
+    height: 64px;
+    margin-block: 0.5rem;
+    border-radius: 16px;
+    background: #000;
+    color: #fff;
+    font-size: 0.82rem;
+    font-weight: 600;
+    line-height: 1.05;
+  }
+  .opt__uber b {
+    color: #06c167;
+  }
+
+  .joinsec {
+    position: relative;
+    padding-block: clamp(4rem, 8vw, 7rem) var(--section-y);
+    background: var(--cream);
+    border-top: 1px solid var(--ink-faint);
+  }
+  .joinsec__anchor {
+    position: absolute;
+    top: 2rem;
+  }
+
+  @media (max-width: 1023px) {
+    .options {
+      grid-template-columns: 1fr 1fr;
+    }
+    .opt--delivery {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (max-width: 767px) {
+    .options {
+      grid-template-columns: 1fr;
+    }
+    .opt__media {
+      aspect-ratio: 16 / 9;
+    }
+  }
+</style>

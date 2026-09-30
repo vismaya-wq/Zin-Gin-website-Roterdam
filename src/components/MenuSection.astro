@@ -1,0 +1,84 @@
+---
+import MenuItem from './MenuItem.astro';
+import { itemsIn, type Category, type CategoryId } from '../data/menu';
+
+interface Props {
+  category: Category;
+  index: number;
+}
+
+const { category, index } = Astro.props;
+const items = itemsIn(category.id as CategoryId);
+---
+
+<section class="msec" id={category.id} data-menu-section={category.id} data-scroll-offset="66" aria-labelledby={`${category.id}-title`}>
+  <div class="container msec__grid">
+    <header class="msec__head">
+      <span class="msec__num">{String(index).padStart(2, '0')}</span>
+      <h2 id={`${category.id}-title`} class="h2" data-reveal="lines">
+        <span class="line"><span>{category.label}</span></span>
+      </h2>
+      {category.intro && <p class="msec__intro">{category.intro}</p>}
+      <span class="msec__count">{items.length} dishes</span>
+    </header>
+    <ul class="msec__list">
+      {items.map((item) => <MenuItem item={item} />)}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .msec {
+    padding-block: clamp(4rem, 8vw, 7rem);
+  }
+  .msec + :global(.msec) {
+    padding-top: 0;
+  }
+  .msec__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr);
+    gap: clamp(2rem, 6vw, 7rem);
+    align-items: start;
+  }
+  .msec__head {
+    position: sticky;
+    top: calc(var(--nav-h) + 100px);
+    display: grid;
+    gap: 0.9rem;
+    color: var(--petrol);
+  }
+  .msec__num {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: var(--terra);
+  }
+  .msec__intro {
+    margin: 0;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 1.35rem;
+    color: var(--ink-soft);
+  }
+  .msec__count {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .msec__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--ink-faint);
+  }
+  @media (max-width: 1023px) {
+    .msec__grid {
+      grid-template-columns: 1fr;
+    }
+    .msec__head {
+      position: static;
+    }
+  }
+</style>

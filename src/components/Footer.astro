@@ -1,0 +1,184 @@
+---
+import { SITE } from '../data/site';
+---
+
+<footer class="footer on-dark" id="contact">
+  <div class="container">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <img src="/zin-gin-badge.png" alt="Zin & Gin — Vegetarian Restaurant & Bar" width="120" height="120" loading="lazy" />
+        <p class="footer__lead">
+          Vegetarian Indian dining,<br /><em>downstairs at Teleport.</em>
+        </p>
+      </div>
+
+      <div class="footer__cols">
+        <div>
+          <h3>Find us</h3>
+          <address>
+            {SITE.name}<br />
+            {SITE.street}<br />
+            {SITE.postcode} {SITE.city}<br />
+            <span class="muted">{SITE.venue}</span>
+          </address>
+          <a class="link-arrow" href={SITE.mapsUrl} target="_blank" rel="noopener">Google Maps <span class="arrow arrow--diag">↗</span></a>
+        </div>
+        <div>
+          <h3>Opening hours</h3>
+          <dl class="hours">
+            {
+              SITE.hours.map((row) => (
+                <div>
+                  <dt>{row.days}</dt>
+                  <dd>{row.time}</dd>
+                </div>
+              ))
+            }
+          </dl>
+        </div>
+        <div>
+          <h3>Say hello</h3>
+          <ul>
+            <li><a href={SITE.phoneHref}>{SITE.phone}</a></li>
+            <li><a href={`mailto:${SITE.email}`}>{SITE.email}</a></li>
+            <li><a href={SITE.instagram} target="_blank" rel="noopener">Instagram · {SITE.instagramHandle}</a></li>
+            <li><a href={SITE.uberEatsUrl} target="_blank" rel="noopener">Uber Eats ↗</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Visit</h3>
+          <ul>
+            <li><a href="/menu">The Menu</a></li>
+            <li><a href="/reserve#table">Reserve a Table</a></li>
+            <li><a href="/reserve#pickup">Order for Pickup · 10% off</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <p class="footer__word" aria-hidden="true">Zin <em>&amp;</em> Gin</p>
+
+    <div class="footer__base">
+      <span>© {new Date().getFullYear()} Zin &amp; Gin · {SITE.street} · {SITE.city}</span>
+      <span>Vegetarian Indian Restaurant &amp; Bar</span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    position: relative;
+    background: var(--petrol-deep);
+    padding-top: clamp(5rem, 10vw, 9rem);
+    padding-bottom: calc(2rem + env(safe-area-inset-bottom));
+    overflow: hidden;
+  }
+  .footer__top {
+    display: grid;
+    grid-template-columns: minmax(0, 0.75fr) minmax(0, 2.4fr);
+    gap: clamp(3rem, 5vw, 6rem);
+  }
+  .footer__brand img {
+    width: 112px;
+    height: 112px;
+    border-radius: 50%;
+  }
+  .footer__lead {
+    margin: 2rem 0 0;
+    font-family: var(--serif);
+    font-size: clamp(1.8rem, 2.6vw, 2.5rem);
+    line-height: 1.1;
+  }
+  .footer__lead em {
+    color: var(--on-dark-soft);
+  }
+  .footer__cols {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: 2.5rem;
+  }
+  .footer h3 {
+    margin: 0 0 1.25rem;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--terra);
+  }
+  .footer address,
+  .footer ul,
+  .hours {
+    margin: 0 0 1.25rem;
+    padding: 0;
+    list-style: none;
+    font-style: normal;
+    font-size: 0.95rem;
+    line-height: 1.9;
+    color: var(--on-dark-soft);
+  }
+  .footer ul a {
+    transition: color 0.3s;
+  }
+  .footer ul a:hover {
+    color: var(--ivory);
+  }
+  .muted {
+    opacity: 0.7;
+  }
+  .hours div {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .hours dt,
+  .hours dd {
+    margin: 0;
+    white-space: nowrap;
+  }
+  .footer__word {
+    margin: clamp(4rem, 8vw, 7rem) 0 0;
+    font-family: var(--serif);
+    font-size: clamp(5rem, 21vw, 22rem);
+    line-height: 0.8;
+    letter-spacing: -0.03em;
+    text-align: center;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(243, 235, 221, 0.22);
+    white-space: nowrap;
+  }
+  .footer__word em {
+    -webkit-text-stroke: 1px rgba(199, 101, 60, 0.6);
+  }
+  .footer__base {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--on-dark-faint);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--on-dark-soft);
+  }
+  @media (max-width: 1280px) {
+    .footer__top {
+      grid-template-columns: 1fr;
+    }
+    .footer__cols {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 767px) {
+    .footer {
+      padding-bottom: calc(7rem + env(safe-area-inset-bottom));
+    }
+    .footer__cols {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    .footer__base {
+      flex-direction: column;
+    }
+  }
+</style>
