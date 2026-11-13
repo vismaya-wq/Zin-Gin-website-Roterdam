@@ -1,0 +1,126 @@
+---
+import { LOCAL_IMAGES } from '../data/images';
+
+/** Naan outline art — bottom corners of the reviews section, spilling slightly below. */
+---
+
+<div class="corner-plates" aria-hidden="true">
+  <div class="corner-plates__slot corner-plates__slot--left">
+    <div class="corner-plates__motion" data-slide-food="left" data-slide-food-seam>
+      <div class="corner-plates__scroll" data-corner-scroll>
+      <img
+        class="corner-plates__art"
+        src={LOCAL_IMAGES.cornerPlateOutline}
+        alt=""
+        width="245"
+        height="196"
+        loading="lazy"
+        decoding="async"
+      />
+      </div>
+    </div>
+  </div>
+  <div class="corner-plates__slot corner-plates__slot--right">
+    <div class="corner-plates__motion" data-slide-food="right" data-slide-food-seam>
+      <div class="corner-plates__scroll" data-corner-scroll>
+      <img
+        class="corner-plates__art is-mirror"
+        src={LOCAL_IMAGES.cornerPlateOutline}
+        alt=""
+        width="245"
+        height="196"
+        loading="lazy"
+        decoding="async"
+      />
+      </div>
+    </div>
+  </div>
+</div>
+
+<style is:global>
+  .reviews .corner-plates {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 0;
+    z-index: 5;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  .reviews .corner-plates__slot {
+    position: absolute;
+    bottom: 0;
+    width: clamp(10rem, 26vw, 17rem);
+  }
+
+  .reviews .corner-plates__slot--left {
+    left: clamp(0px, 2vw, 1.25rem);
+    transform: translate(-18%, 38%);
+  }
+
+  .reviews .corner-plates__slot--right {
+    right: clamp(0px, 2vw, 1.25rem);
+    transform: translate(18%, 38%);
+  }
+
+  .reviews .corner-plates__motion {
+    will-change: transform, opacity;
+  }
+
+  html:not(.js-motion) .reviews .corner-plates__motion {
+    opacity: 1;
+  }
+
+  .reviews .corner-plates__art {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    mix-blend-mode: screen;
+    opacity: 0.06;
+  }
+
+  .reviews .corner-plates__art.is-mirror {
+    transform: scaleX(-1);
+  }
+
+  .reviews-order-bridge {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .reviews-order-bridge .order-paths {
+    position: relative;
+    z-index: 1;
+    padding-top: clamp(2rem, 5vw, 3.5rem);
+  }
+
+  @media (min-width: 1400px) {
+    .reviews .corner-plates__slot--left {
+      left: max(0.5rem, calc((100% - var(--max)) / 2 - 10rem));
+    }
+    .reviews .corner-plates__slot--right {
+      right: max(0.5rem, calc((100% - var(--max)) / 2 - 10rem));
+    }
+  }
+
+  @media (max-width: 767px) {
+    .reviews .corner-plates__slot {
+      width: clamp(8rem, 36vw, 12rem);
+    }
+    .reviews .corner-plates__slot--left {
+      transform: translate(-22%, 42%);
+    }
+    .reviews .corner-plates__slot--right {
+      transform: translate(22%, 42%);
+    }
+  }
+
+  @media (max-width: 520px) {
+    .reviews .corner-plates__slot--right {
+      display: none;
+    }
+  }
+</style>

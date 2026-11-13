@@ -1,0 +1,80 @@
+---
+import { IMAGES, photo } from '../data/images';
+import { SITE } from '../data/site';
+
+const posts = [
+  { image: IMAGES.masalaDosa, alt: 'Masala dosa' },
+  { image: IMAGES.paneerTikka, alt: 'Paneer tikka' },
+  { image: IMAGES.chaat, alt: 'Chaat' },
+  { image: IMAGES.samosa, alt: 'Samosas' },
+  { image: IMAGES.vegPulao, alt: 'Rice' },
+  { image: IMAGES.cocktailDark, alt: 'Cocktail at the bar' },
+];
+const loop = [...posts, ...posts];
+---
+
+<section class="ig section" data-surface="light" aria-labelledby="ig-title">
+  <div class="container ig__head">
+    <div>
+      <p class="eyebrow eyebrow--terra">Instagram</p>
+      <h2 id="ig-title" class="h2">Behind the Zins</h2>
+    </div>
+    <a class="ig__follow btn" href={SITE.instagram} target="_blank" rel="noopener">
+      {SITE.instagramHandle} <span class="arrow arrow--diag">↗</span>
+    </a>
+  </div>
+  <div class="ig__rail" data-reveal="fade">
+    <div class="ig__track">
+      {
+        loop.map((post) => (
+          <a href={SITE.instagram} target="_blank" rel="noopener">
+            <img src={photo(post.image, 700)} alt={post.alt} />
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .ig { background: var(--cream); overflow: hidden; }
+  .ig__head {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: end;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .ig__follow {
+    min-height: 52px;
+    padding: 0 1.5rem;
+    font-size: 0.92rem;
+    letter-spacing: 0.06em;
+  }
+  .ig__rail { overflow: hidden; }
+  .ig__track {
+    display: flex;
+    gap: 0.8rem;
+    width: max-content;
+    animation: ig-move 42s linear infinite;
+  }
+  .ig__track a {
+    display: block;
+    width: min(280px, 70vw);
+    height: 220px;
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .ig__track img { width: 100%; height: 100%; object-fit: cover; }
+  @keyframes ig-move { to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) {
+    .ig__track { animation: none; flex-wrap: wrap; width: auto; padding-inline: var(--gutter); }
+  }
+  @media (max-width: 520px) {
+    .ig__follow {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>

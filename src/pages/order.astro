@@ -1,0 +1,46 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { bonappioHref, posConfigured } from '../data/ordering';
+---
+
+<Layout
+  title="Order for pickup"
+  page="reserve"
+  navTone="dark"
+  description="Order Zin & Gin for takeaway on BonAppio — 10% off direct pickup orders."
+>
+  <section class="handoff" data-surface="light">
+    <div class="container handoff__inner">
+      <p class="eyebrow eyebrow--terra">10% off direct pickup</p>
+      <h1 class="h1">Takeaway</h1>
+      {
+        posConfigured ? (
+          <>
+            <p class="lede">Taking you to BonAppio to complete your order.</p>
+            <a class="btn" href={bonappioHref}>Continue <span class="arrow arrow--diag">↗</span></a>
+            <script is:inline define:vars={{ target: bonappioHref }}>
+              location.replace(target);
+            </script>
+          </>
+        ) : (
+          <p class="lede">BonAppio ordering link is not configured yet.</p>
+        )
+      }
+      <a class="link-arrow" href="/#order">← Back to takeaway &amp; delivery</a>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .handoff {
+    min-height: 70vh;
+    padding: calc(var(--nav-h) + 4rem) 0 4rem;
+    background: var(--cream);
+    color: var(--petrol);
+  }
+  .handoff__inner {
+    display: grid;
+    gap: 1rem;
+    max-width: 38rem;
+  }
+</style>

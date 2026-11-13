@@ -1,0 +1,14 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ContactExperience from '../components/ContactExperience.tsx';
+import '../styles/story-contact.css';
+---
+
+<Layout
+  title="Contact"
+  page="contact"
+  navTone="light"
+  description="Contact Zin & Gin — reservations, directions, WhatsApp and hours. Schiekade 730, inside Teleport Hotel, Rotterdam."
+>
+  <ContactExperience client:load />
+</Layout>

@@ -1,181 +1,476 @@
 ---
-import { SITE } from '../data/site';
+import { NAV, SITE } from '../data/site';
+import { PATHS } from '../data/orderPaths';
+import { bonappioHref } from '../data/ordering';
+import BrandDoodles from './BrandDoodles.astro';
+import FooterQuiz from './FooterQuiz.tsx';
+import FooterSocialIcons from './FooterSocialIcons.astro';
+import '../styles/footer-quiz.css';
+
+const links = [
+  ...NAV.map((item) => ({ label: item.label, href: item.href })),
+  { label: 'What’s on', href: '/#whats-on' },
+  { label: 'Reserve', href: PATHS.reserve },
+  { label: 'Takeaway', href: bonappioHref },
+];
+
 ---
 
-<footer class="footer on-dark" id="contact">
-  <div class="container">
-    <div class="footer__top">
-      <div class="footer__brand">
-        <img src="/zin-gin-badge.png" alt="Zin & Gin — Vegetarian Restaurant & Bar" width="120" height="120" loading="lazy" />
-        <p class="footer__lead">
-          Vegetarian Indian dining,<br /><em>downstairs at Teleport.</em>
+<footer class="footer on-dark" id="contact" data-surface="dark">
+  <BrandDoodles />
+  <div class="footer__brand-band">
+    <img class="footer__deco footer__deco--food" src="/images/footer-food-plate.png" alt="" width="320" height="320" loading="lazy" decoding="async" />
+    <div class="container">
+      <div class="footer__word" aria-hidden="true">
+        <span class="zin">Zin</span>
+        <div class="footer__mark">
+          <a class="footer__logo-link footer__logo-link--zin" href="/" aria-label="Zin &amp; Gin home">
+            <img class="footer__seal" src="/zin-gin-badge.png" alt="" width="120" height="120" />
+          </a>
+          <a
+            class="footer__logo-link footer__logo-link--tapri"
+            href="https://www.urbantapri.nl/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Urban Tapri"
+          >
+            <img src="/urban-tapri.png" alt="" width="56" height="56" />
+          </a>
+        </div>
+        <span class="gin">Gin</span>
+      </div>
+    </div>
+    <img class="footer__deco footer__deco--drink" src="/images/footer-cocktail.png" alt="" width="240" height="360" loading="lazy" decoding="async" />
+  </div>
+  <div class="container footer__stage">
+    <p class="sr-only">Zin &amp; Gin — in partnership with Urban Tapri</p>
+
+    <nav class="footer__nav" aria-label="Footer">
+      {
+        links.map((item) => (
+          <a href={item.href}>{item.label}</a>
+        ))
+      }
+    </nav>
+
+    <div class="footer__grid">
+      <div>
+        <h2>Find us</h2>
+        <address>
+          {SITE.street}<br />
+          {SITE.postcode} {SITE.city}<br />
+          {SITE.venue}
+        </address>
+        <p class="footer__email">
+          <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
         </p>
+        <p class="footer__phone">
+          <a href={SITE.phoneHref}>
+            <span aria-hidden="true">📞</span>
+            <span>+31 6 23953951</span>
+          </a>
+        </p>
+        <a class="link-arrow" href={SITE.mapsUrl} target="_blank" rel="noopener">Directions <span class="arrow arrow--diag">↗</span></a>
       </div>
-
-      <div class="footer__cols">
-        <div>
-          <h3>Find us</h3>
-          <address>
-            {SITE.name}<br />
-            {SITE.street}<br />
-            {SITE.postcode} {SITE.city}<br />
-            <span class="muted">{SITE.venue}</span>
-          </address>
-          <a class="link-arrow" href={SITE.mapsUrl} target="_blank" rel="noopener">Google Maps <span class="arrow arrow--diag">↗</span></a>
-        </div>
-        <div>
-          <h3>Opening hours</h3>
-          <dl class="hours">
-            {
-              SITE.hours.map((row) => (
-                <div>
-                  <dt>{row.days}</dt>
-                  <dd>{row.time}</dd>
-                </div>
-              ))
-            }
-          </dl>
-        </div>
-        <div>
-          <h3>Say hello</h3>
-          <ul>
-            <li><a href={SITE.phoneHref}>{SITE.phone}</a></li>
-            <li><a href={`mailto:${SITE.email}`}>{SITE.email}</a></li>
-            <li><a href={SITE.instagram} target="_blank" rel="noopener">Instagram · {SITE.instagramHandle}</a></li>
-            <li><a href={SITE.uberEatsUrl} target="_blank" rel="noopener">Uber Eats ↗</a></li>
-          </ul>
-        </div>
-        <div>
-          <h3>Visit</h3>
-          <ul>
-            <li><a href="/menu">The Menu</a></li>
-            <li><a href="/reserve#table">Reserve a Table</a></li>
-            <li><a href="/reserve#pickup">Order for Pickup · 10% off</a></li>
-          </ul>
-        </div>
+      <div class="footer__hours">
+        <FooterQuiz client:visible />
+        <h2>Dinner</h2>
+        <dl class="hours">
+          {SITE.dinnerHours.map((row) => (
+            <div><dt>{row.days}</dt><dd>{row.time}</dd></div>
+          ))}
+        </dl>
+        <h2>Breakfast</h2>
+        <dl class="hours">
+          {SITE.breakfastHours.map((row) => (
+            <div><dt>{row.days}</dt><dd>{row.time}</dd></div>
+          ))}
+        </dl>
+      </div>
+      <div class="footer__actions">
+        <h2>Come over</h2>
+        <a class="btn btn--light" href={PATHS.reserve}>Reserve a Table <span class="arrow">→</span></a>
+        <a class="footer__uber" href={SITE.uberEatsUrl} target="_blank" rel="noopener noreferrer">
+          <span class="sr-only">Order on Uber Eats</span>
+          <svg width="42" height="42" viewBox="0 0 42 42" aria-hidden="true">
+            <rect width="42" height="42" rx="12" fill="#06c167" />
+            <path d="M13 16.5h16l-1.2 11.2a2 2 0 0 1-2 1.8H16.2a2 2 0 0 1-2-1.8L13 16.5z" fill="#06281a" />
+            <path d="M17 16.2a4 4 0 0 1 8 0" fill="none" stroke="#06281a" stroke-width="1.8" />
+          </svg>
+        </a>
+        <FooterSocialIcons />
       </div>
     </div>
+  </div>
 
-    <p class="footer__word" aria-hidden="true">Zin <em>&amp;</em> Gin</p>
-
-    <div class="footer__base">
-      <span>© {new Date().getFullYear()} Zin &amp; Gin · {SITE.street} · {SITE.city}</span>
-      <span>Vegetarian Indian Restaurant &amp; Bar</span>
-    </div>
+  <div class="container footer__base">
+    <span>© {new Date().getFullYear()} Zin &amp; Gin</span>
   </div>
 </footer>
 
 <style>
   .footer {
     position: relative;
-    background: var(--petrol-deep);
-    padding-top: clamp(5rem, 10vw, 9rem);
-    padding-bottom: calc(2rem + env(safe-area-inset-bottom));
+    background: var(--petrol);
+    color: var(--ivory);
+    padding: clamp(2.5rem, 6vw, 4.5rem) 0 calc(1.5rem + env(safe-area-inset-bottom));
     overflow: hidden;
   }
-  .footer__top {
+  .footer__stage {
+    position: relative;
+  }
+  .footer__brand-band {
+    position: relative;
+    min-height: clamp(7rem, 18vw, 11rem);
+    margin-bottom: 0.25rem;
+  }
+  .footer__brand-band .container {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    min-height: inherit;
+  }
+  .footer__deco {
+    position: absolute;
+    pointer-events: none;
+    z-index: 1;
+    height: auto;
+    object-fit: contain;
+    mix-blend-mode: screen;
+  }
+  .footer__deco--food {
+    left: max(-2rem, -4vw);
+    top: 18%;
+    width: clamp(7.5rem, 15vw, 11.5rem);
+    transform: rotate(-10deg);
+    opacity: 0.92;
+  }
+  .footer__deco--drink {
+    right: max(-1.5rem, -3vw);
+    top: 6%;
+    width: clamp(6.5rem, 13vw, 10rem);
+    transform: rotate(4deg);
+    opacity: 0.9;
+  }
+  .footer__word {
+    position: relative;
+    z-index: 2;
     display: grid;
-    grid-template-columns: minmax(0, 0.75fr) minmax(0, 2.4fr);
-    gap: clamp(3rem, 5vw, 6rem);
-  }
-  .footer__brand img {
-    width: 112px;
-    height: 112px;
-    border-radius: 50%;
-  }
-  .footer__lead {
-    margin: 2rem 0 0;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    margin: 0;
     font-family: var(--serif);
-    font-size: clamp(1.8rem, 2.6vw, 2.5rem);
-    line-height: 1.1;
+    font-size: clamp(3.4rem, 15vw, 12.5rem);
+    font-weight: 500;
+    line-height: 0.78;
+    letter-spacing: -0.045em;
   }
-  .footer__lead em {
-    color: var(--on-dark-soft);
+  .footer__mark {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(0.85rem, 2.4vw, 1.5rem);
+    min-width: clamp(140px, 22vw, 220px);
   }
-  .footer__cols {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 1.2fr) minmax(0, 1fr);
-    gap: 2.5rem;
+  .footer__logo-link {
+    display: block;
+    flex-shrink: 0;
+    transition:
+      transform 0.55s var(--ease-out),
+      filter 0.45s var(--ease-out);
   }
-  .footer h3 {
-    margin: 0 0 1.25rem;
-    font-size: 0.68rem;
-    font-weight: 600;
-    letter-spacing: 0.24em;
-    text-transform: uppercase;
+  .footer__logo-link:hover {
+    transform: translateY(-4px) scale(1.05);
+    filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.35));
+  }
+  .footer__logo-link--tapri {
+    padding: 0.35rem 0.45rem;
+    border-radius: 10px;
+    background: #000;
+  }
+  .footer__logo-link--tapri img {
+    width: clamp(48px, 6vw, 64px);
+    height: auto;
+    border-radius: 6px;
+    display: block;
+  }
+  .footer__logo-link:active {
+    transform: translateY(-1px) scale(1.02);
+  }
+  .zin {
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--ivory);
+  }
+  .amp {
     color: var(--terra);
+    font-style: italic;
+    font-size: 0.42em;
+    line-height: 1;
+    padding-bottom: 0.12em;
   }
+  .gin {
+    text-align: right;
+  }
+  .footer__seal {
+    width: clamp(64px, 9vw, 118px);
+    height: auto;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
+    transition: transform 0.55s var(--ease-out);
+  }
+  .footer__logo-link--zin:hover .footer__seal {
+    transform: rotate(-4deg);
+  }
+  .footer__nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin-top: clamp(1.4rem, 3vw, 2.2rem);
+  }
+  .footer__nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0.35rem 0.95rem;
+    border-radius: 999px;
+    background: rgba(243, 235, 221, 0.08);
+    font-size: 0.78rem;
+    font-weight: 650;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition:
+      transform 0.4s var(--ease-out),
+      background 0.4s var(--ease-out),
+      color 0.4s var(--ease-out),
+      box-shadow 0.4s var(--ease-out);
+  }
+  .footer__nav a:hover {
+    background: var(--ivory);
+    color: var(--petrol);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+  }
+  .footer .link-arrow {
+    transition: gap 0.35s var(--ease-out), opacity 0.35s var(--ease-out);
+  }
+  .footer .link-arrow:hover {
+    opacity: 1;
+  }
+  .footer .link-arrow .arrow {
+    transition: transform 0.4s var(--ease-out);
+  }
+  .footer .link-arrow:hover .arrow {
+    transform: translateX(4px);
+  }
+  .footer .btn {
+    transition:
+      transform 0.45s var(--ease-out),
+      box-shadow 0.45s var(--ease-out),
+      filter 0.45s var(--ease-out);
+  }
+  .footer .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.22);
+  }
+  .footer__grid > div {
+    transition: transform 0.5s var(--ease-out);
+  }
+  .footer__grid > div:hover {
+    transform: translateY(-2px);
+  }
+  .footer__grid {
+    display: grid;
+    grid-template-columns: 1fr 1.15fr auto;
+    gap: clamp(1.25rem, 3vw, 2.5rem);
+    margin-top: clamp(1.8rem, 4vw, 3rem);
+    padding-top: 1.4rem;
+    border-top: 1px solid rgba(243, 235, 221, 0.16);
+  }
+  .footer h2 {
+    margin: 0 0 0.55rem;
+    font-family: var(--sans);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #f3b08e;
+  }
+  .hours + h2 {
+    margin-top: 1.15rem;
+  }
+  .footer h2 + .hours,
   .footer address,
-  .footer ul,
   .hours {
-    margin: 0 0 1.25rem;
-    padding: 0;
-    list-style: none;
+    margin: 0 0 0.9rem;
     font-style: normal;
-    font-size: 0.95rem;
-    line-height: 1.9;
+    line-height: 1.65;
     color: var(--on-dark-soft);
-  }
-  .footer ul a {
-    transition: color 0.3s;
-  }
-  .footer ul a:hover {
-    color: var(--ivory);
-  }
-  .muted {
-    opacity: 0.7;
   }
   .hours div {
     display: flex;
     justify-content: space-between;
     gap: 1rem;
+    margin-inline: -0.35rem;
+    padding: 0.35rem 0.5rem;
+    border-radius: 10px;
+    transition: background 0.35s var(--ease-out);
+  }
+  .hours div:hover {
+    background: rgba(243, 235, 221, 0.07);
+  }
+  .footer address {
+    transition: color 0.35s var(--ease-out);
+  }
+  .footer__email {
+    margin: 0 0 0.75rem;
+    font-size: 0.88rem;
+  }
+  .footer__email a {
+    color: var(--on-dark-soft);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .footer__email a:hover {
+    color: var(--ivory);
+  }
+  .footer__phone {
+    margin: -0.35rem 0 0.75rem;
+  }
+  .footer__phone a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--on-dark-soft);
+  }
+  .footer__phone a:hover {
+    color: var(--ivory);
+  }
+  .footer__hours .fquiz {
+    margin: 0 0 2rem;
+    width: 100%;
+  }
+  .footer__uber {
+    display: inline-flex;
+    border-radius: 12px;
+    transition: transform 0.35s var(--ease-out);
+  }
+  .footer__uber:hover {
+    transform: translateY(-2px);
+  }
+  .footer address:hover {
+    color: var(--ivory);
   }
   .hours dt,
   .hours dd {
     margin: 0;
-    white-space: nowrap;
   }
-  .footer__word {
-    margin: clamp(4rem, 8vw, 7rem) 0 0;
-    font-family: var(--serif);
-    font-size: clamp(5rem, 21vw, 22rem);
-    line-height: 0.8;
-    letter-spacing: -0.03em;
-    text-align: center;
-    color: transparent;
-    -webkit-text-stroke: 1px rgba(243, 235, 221, 0.22);
-    white-space: nowrap;
+  .footer__actions {
+    display: grid;
+    gap: 0.7rem;
+    align-content: start;
+    justify-items: start;
   }
-  .footer__word em {
-    -webkit-text-stroke: 1px rgba(199, 101, 60, 0.6);
+  .footer__actions .fquiz {
+    margin-top: 0.75rem;
+    max-width: 100%;
+    width: 100%;
   }
   .footer__base {
     display: flex;
     justify-content: space-between;
-    gap: 1rem;
-    margin-top: 2.5rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--on-dark-faint);
+    gap: 0.8rem 1.2rem;
+    flex-wrap: wrap;
+    margin-top: 1.4rem;
     font-size: 0.72rem;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--on-dark-soft);
   }
-  @media (max-width: 1280px) {
-    .footer__top {
-      grid-template-columns: 1fr;
-    }
-    .footer__cols {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+  .footer__base a {
+    transition: color 0.35s var(--ease-out), transform 0.35s var(--ease-out);
+  }
+  .footer__base a:hover {
+    color: var(--ivory);
+    transform: translateY(-1px);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .footer__logo-link:hover,
+    .footer__nav a:hover,
+    .footer .btn:hover,
+    .footer__grid > div:hover {
+      transform: none;
     }
   }
-  @media (max-width: 767px) {
-    .footer {
-      padding-bottom: calc(7rem + env(safe-area-inset-bottom));
+  @media (max-width: 860px) {
+    .footer__word {
+      font-size: clamp(3.1rem, 18vw, 6.5rem);
     }
-    .footer__cols {
+    .footer__seal {
+      width: 72px;
+      top: 0.15rem;
+    }
+    .footer__grid {
       grid-template-columns: 1fr;
-      gap: 2rem;
+    }
+    .footer__actions .btn {
+      width: 100%;
+    }
+  }
+  @media (max-width: 520px) {
+    .footer__deco--food {
+      left: -3.5rem;
+      top: 22%;
+      width: 6.25rem;
+      opacity: 0.75;
+    }
+    .footer__deco--drink {
+      right: -3.5rem;
+      width: 5.5rem;
+      opacity: 0.7;
+    }
+    .footer__word {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: clamp(2.8rem, 14vw, 3.6rem);
+      line-height: 0.8;
+    }
+    .amp {
+      display: none;
+    }
+    .gin {
+      text-align: left;
+    }
+    .zin {
+      -webkit-text-stroke-width: 1px;
+    }
+    .footer__seal {
+      width: 58px;
+    }
+    .footer__mark {
+      gap: 0.65rem;
+      min-width: 0;
+    }
+    .footer__logo-link--tapri img {
+      width: 40px;
+    }
+    .footer__nav {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      margin-top: 1.15rem;
+    }
+    .footer__nav a {
+      justify-content: center;
+    }
+    .hours div {
+      gap: 0.5rem;
     }
     .footer__base {
       flex-direction: column;

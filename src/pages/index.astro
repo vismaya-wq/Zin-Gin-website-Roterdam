@@ -4,23 +4,25 @@ import HeroSection from '../components/HeroSection.astro';
 import EditorialImageBlock from '../components/EditorialImageBlock.astro';
 import FoodDiscovery from '../components/FoodDiscovery.astro';
 import ReviewSection from '../components/ReviewSection.astro';
-import HotelGuestBanner from '../components/HotelGuestBanner.astro';
-import PickupBanner from '../components/PickupBanner.astro';
-import UberEatsSection from '../components/UberEatsSection.astro';
+import OrderPathsSection from '../components/OrderPathsSection.astro';
+import WhatsOn from '../components/WhatsOn.tsx';
+import InstagramRail from '../components/InstagramRail.astro';
 import ClosingCTA from '../components/ClosingCTA.astro';
 ---
 
 <Layout
   title="Home"
   page="home"
-  description="Zin & Gin — vegetarian Indian restaurant & bar inside Teleport Hotel, Schiekade 730, Rotterdam. Reserve a table or order direct for pickup and save 10%."
+  description="Zin & Gin is a vegetarian Indian restaurant and bar in Rotterdam. Indian food, botanical gin and cocktails inside Hotel Teleport, Schiekade 730. Reserve a table or order for pickup."
 >
   <HeroSection />
   <EditorialImageBlock />
   <FoodDiscovery />
-  <ReviewSection />
-  <HotelGuestBanner />
-  <PickupBanner />
-  <UberEatsSection />
+  <div class="reviews-order-bridge">
+    <ReviewSection />
+    <OrderPathsSection />
+  </div>
+  <WhatsOn client:load />
+  <InstagramRail />
   <ClosingCTA />
 </Layout>

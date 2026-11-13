@@ -1,0 +1,413 @@
+---
+import ConsultDialog from '../components/wound/ConsultDialog';
+import { CLINIC } from '../data/wound';
+import '../styles/wound-care.css';
+
+const title = 'Wound Care in Kalaburagi | Dr. Faraaz Patel · Vitalis Healthcare';
+const description =
+  'You change the dressing, but the wound still does not get better. Consult Dr. Faraaz Patel at Vitalis Healthcare, Kalaburagi.';
+
+const problems = [
+  "You've been dressing the wound for weeks, but it looks the same.",
+  'A small cut on your foot has become a bigger problem.',
+  'The wound closes, then opens again.',
+  "There's swelling, pain or discharge around the wound.",
+  "You're worried because you have diabetes and a foot injury.",
+];
+
+const treats = [
+  {
+    title: 'Diabetic foot wounds',
+    image: '/wound-care/diabetic-foot.jpg',
+    alt: 'A clinician examining a dressed foot',
+    concern: 'diabetic-foot',
+  },
+  {
+    title: 'Wounds that take too long to heal',
+    image: '/wound-care/slow-healing.jpg',
+    alt: 'A shallow wound on a lower leg that is still healing',
+    concern: 'not-healing',
+  },
+  {
+    title: 'Wounds that keep reopening',
+    image: '/wound-care/reopening-wound.jpg',
+    alt: 'A clinician covering a scar that has opened again',
+    concern: 'recurrent',
+  },
+  {
+    title: 'Wounds with signs of infection',
+    image: '/wound-care/infected-wound.jpg',
+    alt: 'Redness around a white dressing on a lower leg',
+    concern: 'other',
+  },
+  {
+    title: 'Wounds after surgery',
+    image: '/wound-care/post-surgical.jpg',
+    alt: 'Gloved hands checking a surgical dressing on a thigh',
+    concern: 'other',
+  },
+  {
+    title: 'Long-standing wounds',
+    image: '/wound-care/chronic-wound.jpg',
+    alt: "A nurse changing a dressing on an older patient's leg",
+    concern: 'other',
+  },
+];
+
+const steps = [
+  ['01 — Tell us about the problem', 'Our team will help arrange your appointment.'],
+  ['02 — The doctor examines the wound', 'The doctor checks its condition and understands your medical history.'],
+  ['03 — Discuss what needs to be done', "You'll be advised on the suitable treatment and whether any further tests or procedures are needed."],
+  ['04 — Follow the treatment plan', "You'll receive guidance on the next steps and follow-up care."],
+];
+
+const questions = [
+  ['Do I need to wait until the wound becomes painful?', 'No. If a wound is not improving, keeps reopening or is getting worse, have it examined.'],
+  ['I have diabetes. Should I worry about a small foot wound?', 'Yes, it is worth getting checked early. Foot wounds in people with diabetes can become serious, even when they look small.'],
+  ['Does every wound need surgery?', 'No. The treatment depends on the type and condition of the wound. The doctor will explain the options after examining it.'],
+  ['How do I book an appointment?', 'Fill in the form on this page or call Vitalis Healthcare. Our team will help arrange your consultation.'],
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#12262c" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <link rel="icon" href="/wound-care/vitalis-logo.png" type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500..700&family=Outfit:wght@400..700&display=swap"
+    />
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'MedicalClinic',
+        name: CLINIC.name,
+        medicalSpecialty: 'Surgical',
+        telephone: '+918494906440',
+        email: CLINIC.email,
+        address: {
+          '@type': 'PostalAddress',
+          streetAddress: 'No. 4 & 5, First Floor, A.K. Asian Grand, Main Road',
+          addressLocality: 'Kalaburagi',
+          postalCode: '585105',
+          addressCountry: 'IN',
+        },
+        employee: {
+          '@type': 'Physician',
+          name: CLINIC.doctorFormal,
+          medicalSpecialty: 'General Surgery',
+        },
+      })}
+    />
+  </head>
+  <body>
+    <a class="wc-skip" href="#book">Skip to booking</a>
+    <header class="wc-header">
+      <a class="wc-brand" href="#top">
+        <img src="/wound-care/vitalis-logo.png" width="241" height="68" alt="Vitalis" />
+      </a>
+      <p class="wc-loc">{CLINIC.city}</p>
+      <div class="wc-header-actions">
+        <button class="wc-header-book" type="button" data-open-consult data-source="hero" data-heading="Tell us how we can help.">Book</button>
+        <a class="wc-call" href={CLINIC.phoneHref}>
+          <span class="wc-call-long">{CLINIC.phoneDisplay}</span>
+          <span class="wc-call-short">Call</span>
+        </a>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="wc-hero" aria-labelledby="hero-title">
+        <div class="wc-wrap wc-hero-grid">
+          <div class="wc-hero-copy">
+            <p class="wc-kicker">Vitalis Healthcare · Kalaburagi</p>
+            <h1 id="hero-title">How long have you been treating the same wound?</h1>
+            <p class="wc-lede">You change the dressing. You take care of it. But the wound still doesn't seem to get better.</p>
+            <p class="wc-consult-line">It's time to find out why.</p>
+            <p class="wc-consult-line">Consult Dr. Faraaz Patel at Vitalis Healthcare, Kalaburagi.</p>
+            <button
+              class="wc-book"
+              id="book"
+              type="button"
+              data-open-consult
+              data-source="hero"
+              data-heading="Tell us how we can help."
+            >
+              Book a Consultation
+            </button>
+          </div>
+          <figure class="wc-hero-photo">
+            <img
+              src="/wound-care/care-dressing.jpg"
+              width="1024"
+              height="576"
+              alt="A clinician dressing a patient's leg"
+              fetchpriority="high"
+            />
+          </figure>
+          <a class="wc-more" href="#situations">Continue browsing <span aria-hidden="true">↓</span></a>
+        </div>
+      </section>
+
+      <section class="wc-section" id="situations" aria-labelledby="situations-title">
+        <div class="wc-wrap wc-split">
+          <div>
+            <h2 id="situations-title">Some wounds need more than regular dressing.</h2>
+            <figure class="wc-photo">
+              <img
+                src="/wound-care/healing-wound.png"
+                width="784"
+                height="441"
+                alt="A healing wound on a lower leg"
+                loading="lazy"
+              />
+            </figure>
+          </div>
+          <div>
+            <ul class="wc-problems">
+              {problems.map((item) => <li>{item}</li>)}
+            </ul>
+            <p class="wc-nudge">If you're facing any of these problems, don't wait for it to get worse.</p>
+            <button class="wc-book" type="button" data-open-consult data-source="situations" data-heading="Tell us how we can help.">
+              Talk to Our Team
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="wc-section wc-band" id="diabetic" aria-labelledby="diabetic-title">
+        <div class="wc-wrap wc-split wc-split-media">
+          <figure class="wc-photo">
+            <img
+              src="/wound-care/consult.jpg"
+              width="1024"
+              height="576"
+              alt="A doctor talking through a care plan with a patient"
+              loading="lazy"
+            />
+          </figure>
+          <div>
+            <h2 id="diabetic-title">Have diabetes? Check your feet regularly.</h2>
+            <p class="wc-copy">A small cut, blister or wound on your foot may not seem serious at first.</p>
+            <p class="wc-copy">
+              But with diabetes, even a small foot wound can become difficult to manage, especially when healing is slow.
+            </p>
+            <p class="wc-copy">Don't wait for it to become painful or bigger. Get it examined by a doctor.</p>
+            <button class="wc-book" type="button" data-open-consult data-source="diabetic" data-heading="Tell us how we can help.">
+              Book a Consultation
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="wc-section" aria-labelledby="treats-title">
+        <div class="wc-wrap">
+          <h2 id="treats-title">Wound problems we see and treat</h2>
+          <ul class="wc-treats">
+            {
+              treats.map((item) => (
+                <li>
+                  <button
+                    class="wc-treat"
+                    type="button"
+                    data-open-consult
+                    data-source="treats"
+                    data-concern={item.concern}
+                    data-heading="Tell us how we can help."
+                  >
+                    <img src={item.image} width="1152" height="864" alt={item.alt} loading="lazy" />
+                    <span>{item.title}</span>
+                  </button>
+                </li>
+              ))
+            }
+          </ul>
+          <p class="wc-copy">
+            The doctor will examine your wound and explain the suitable treatment based on your condition.
+          </p>
+        </div>
+      </section>
+
+      <section class="wc-section wc-band" aria-labelledby="doctor-title">
+        <div class="wc-wrap wc-doctor">
+          <figure>
+            <img
+              src="/wound-care/dr-faraaz.png"
+              width="595"
+              height="664"
+              alt="Dr. Ahmed Faraaz Patel, general surgeon at Vitalis Healthcare"
+              loading="lazy"
+            />
+          </figure>
+          <div>
+            <p class="wc-kicker">Doctor</p>
+            <h2 id="doctor-title">Get your wound checked by a doctor.</h2>
+            <p class="wc-role">Dr. Faraaz Patel</p>
+            <p class="wc-consult-line">Wound Care & Surgical Consultations</p>
+            <p class="wc-copy">
+              Dr. Faraaz Patel consults at Vitalis Healthcare, Kalaburagi, for patients with different wound-related problems.
+            </p>
+            <p class="wc-copy">
+              During your consultation, he will examine the wound, understand your condition and explain the next steps.
+            </p>
+            <ul class="wc-quals">
+              <li>
+                <strong>MBBS</strong>
+                <span>Manipal Academy of Higher Education, 2010</span>
+              </li>
+              <li>
+                <strong>MS, General Surgery</strong>
+                <span>BLDE University, 2017</span>
+              </li>
+              <li>
+                <strong>FIAGES · FMIOS</strong>
+              </li>
+              <li>
+                <strong>Karnataka Medical Council</strong>
+                <span>Registration 86532</span>
+              </li>
+            </ul>
+            <button class="wc-book" type="button" data-open-consult data-source="doctor" data-heading="Tell us how we can help.">
+              Arrange a Consultation
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="wc-section" aria-labelledby="visit-title">
+        <div class="wc-wrap">
+          <h2 id="visit-title">Here's what to expect.</h2>
+          <ol class="wc-steps">
+            {
+              steps.map(([name, detail]) => (
+                <li>
+                  <h3>{name}</h3>
+                  <p>{detail}</p>
+                </li>
+              ))
+            }
+          </ol>
+        </div>
+      </section>
+
+      <section class="wc-section wc-band" aria-labelledby="faq-title">
+        <div class="wc-wrap">
+          <h2 id="faq-title">Common questions</h2>
+          <div class="wc-faq">
+            {
+              questions.map(([question, answer], index) => (
+                <article>
+                  <h3>{question}</h3>
+                  {index === questions.length - 1 ? (
+                    <p>
+                      Fill in the{' '}
+                      <button class="wc-text-btn" type="button" data-open-consult data-source="faq" data-heading="Tell us how we can help.">
+                        form on this page
+                      </button>{' '}
+                      or call Vitalis Healthcare. Our team will help arrange your consultation.
+                    </p>
+                  ) : (
+                    <p>{answer}</p>
+                  )}
+                </article>
+              ))
+            }
+          </div>
+        </div>
+      </section>
+
+      <section class="wc-final" id="consult-final" aria-labelledby="final-title">
+        <div class="wc-wrap wc-split wc-split-media">
+          <div>
+            <h2 id="final-title">Don't keep treating the same wound without knowing what's wrong.</h2>
+            <p class="wc-copy">Get it examined. Understand the problem. Know what to do next.</p>
+            <p class="wc-consult-line">Consult Dr. Faraaz Patel at Vitalis Healthcare, Kalaburagi.</p>
+            <button
+              class="wc-book wc-book-light"
+              type="button"
+              data-open-consult
+              data-source="final"
+              data-heading="Request an Appointment"
+            >
+              Request a Call Back
+            </button>
+          </div>
+          <figure class="wc-photo">
+            <img
+              src="/wound-care/dressing-close.png"
+              width="779"
+              height="431"
+              alt="Gloved hands placing a fresh dressing"
+              loading="lazy"
+            />
+          </figure>
+        </div>
+      </section>
+    </main>
+
+    <footer class="wc-footer">
+      <div class="wc-wrap wc-footer-main">
+        <div class="wc-footer-brand">
+          <img src="/wound-care/vitalis-logo.png" width="241" height="68" alt="Vitalis" />
+          <p>Dr. Faraaz Patel · {CLINIC.city}</p>
+        </div>
+        <div>
+          <h2>Clinic</h2>
+          <p>No. 4 &amp; 5, First Floor<br />A.K. Asian Grand, Main Road<br />Kalaburagi, Karnataka 585105</p>
+          <p>{CLINIC.landmark}</p>
+          <p><a href={CLINIC.maps}>Get directions</a></p>
+        </div>
+        <div class="wc-footer-hours">
+          <h2>Hours</h2>
+          <p><span>Mon–Thu, Sat</span> <strong>11:00 AM – 3:00 PM</strong></p>
+          <p><strong>4:00 PM – 8:00 PM</strong></p>
+          <p><span>Friday</span> <strong>Holiday</strong></p>
+        </div>
+        <div>
+          <h2>Call</h2>
+          <a class="wc-footer-phone" href={CLINIC.phoneHref}>{CLINIC.phoneDisplay}</a>
+          <a class="wc-footer-phone" href={CLINIC.phoneAltHref}>{CLINIC.phoneAltDisplay}</a>
+          <a class="wc-footer-mail" href={`mailto:${CLINIC.email}`}>{CLINIC.email}</a>
+        </div>
+      </div>
+      <div class="wc-wrap wc-footer-base">
+        <p>
+          This page requests a clinic consultation. If there is heavy bleeding, a high fever, rapidly spreading redness,
+          or you feel severely unwell, go to the nearest emergency hospital.
+        </p>
+      </div>
+    </footer>
+
+    <ConsultDialog client:load />
+
+    <script>
+      const openConsult = (concern: string, source: string, heading: string) => {
+        window.dispatchEvent(new CustomEvent('wc-open', { detail: { concern, source, heading } }));
+      };
+
+      document.addEventListener('click', (event) => {
+        const target = event.target;
+        if (!(target instanceof Element)) return;
+        const opener = target.closest('[data-open-consult]');
+        if (!opener) return;
+        openConsult(
+          opener.getAttribute('data-concern') || '',
+          opener.getAttribute('data-source') || 'hero',
+          opener.getAttribute('data-heading') || 'Tell us how we can help.',
+        );
+      });
+    </script>
+  </body>
+</html>
+

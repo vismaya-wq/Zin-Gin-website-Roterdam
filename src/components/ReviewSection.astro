@@ -1,5 +1,6 @@
 ---
 import { SITE } from '../data/site';
+import CornerOutlinePlates from './CornerOutlinePlates.astro';
 
 const quotes = [
   'Fresh, beautifully presented and full of flavour.',
@@ -8,7 +9,8 @@ const quotes = [
 ];
 ---
 
-<section class="reviews section" aria-labelledby="reviews-title">
+<section class="reviews section" data-surface="light" data-section-seam aria-labelledby="reviews-title">
+  <CornerOutlinePlates />
   <div class="container reviews__grid">
     <div class="reviews__score">
       <p class="eyebrow eyebrow--terra" data-reveal="fade">Google reviews</p>
@@ -16,13 +18,13 @@ const quotes = [
         <span class="line"><span>{SITE.rating.toFixed(1)}</span></span>
       </p>
       <p class="reviews__stars" aria-hidden="true" data-reveal="fade">★★★★★</p>
-      <p class="reviews__count" data-reveal="fade">{SITE.reviewCount} Google reviews</p>
+      <p class="reviews__count" data-reveal="fade"><strong>{SITE.reviewCount}</strong> Google reviews</p>
     </div>
 
     <div class="reviews__body">
       <h2 id="reviews-title" class="h2" data-reveal="lines">
-        <span class="line"><span>Rotterdam seems</span></span>
-        <span class="line"><span><em>to like us.</em></span></span>
+        <span class="line"><span>What do people</span></span>
+        <span class="line"><span><em>think about us?</em></span></span>
       </h2>
 
       <ul class="quotes">
@@ -40,8 +42,8 @@ const quotes = [
         }
       </ul>
 
-      <a class="link-arrow" href={SITE.reviewsUrl} target="_blank" rel="noopener" data-reveal="fade">
-        Read Our Reviews <span class="arrow">→</span>
+      <a class="btn reviews__cta" href={SITE.reviewsUrl} target="_blank" rel="noopener" data-reveal="fade">
+        Read Our Reviews <span class="arrow arrow--diag">↗</span>
       </a>
     </div>
   </div>
@@ -49,10 +51,18 @@ const quotes = [
 
 <style>
   .reviews {
+    position: relative;
+    z-index: 2;
+    overflow: visible;
     background: var(--ivory);
     color: var(--petrol);
+    padding-bottom: clamp(3.5rem, 9vw, 6.5rem);
   }
   .reviews__grid {
+    position: relative;
+    z-index: 1;
+    position: relative;
+    z-index: 1;
     display: grid;
     grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr);
     gap: clamp(3rem, 8vw, 9rem);
@@ -82,6 +92,14 @@ const quotes = [
     font-weight: 600;
     letter-spacing: 0.2em;
     text-transform: uppercase;
+  }
+  .reviews__count strong {
+    font-weight: 800;
+    color: var(--petrol);
+    font-size: 1.05em;
+  }
+  .reviews__cta {
+    margin-top: 0.5rem;
   }
   .reviews__body {
     display: grid;

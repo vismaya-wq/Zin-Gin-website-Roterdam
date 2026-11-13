@@ -1,0 +1,77 @@
+---
+import { SITE } from '../data/site';
+
+const DELIVERY_PARTNERS = SITE.uberEatsUrl
+  ? [{ id: 'uber', label: 'Uber Eats', href: SITE.uberEatsUrl }]
+  : [];
+
+interface Props {
+  heading?: string;
+  lines?: string[];
+  compact?: boolean;
+}
+
+const {
+  heading = 'Rather stay where you are?',
+  lines = ['Order Zin & Gin through your preferred delivery partner.'],
+  compact = false,
+} = Astro.props;
+---
+
+<section class:list={['delivery-strip', compact && 'delivery-strip--compact']} aria-label="Delivery partners">
+  <div class="container">
+    <div class="delivery-strip__row" data-reveal="fade">
+      <div class="delivery-strip__copy">
+        <h2 class="h3">{heading}</h2>
+        <p>{lines.join(' ')}</p>
+      </div>
+      <div class="delivery-strip__actions">
+        {
+          DELIVERY_PARTNERS.map((p) => (
+            <a class="btn btn--ghost" href={p.href} target="_blank" rel="noopener noreferrer">
+              {p.label} <span class="arrow arrow--diag">↗</span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .delivery-strip {
+    background: var(--cream);
+    padding-bottom: clamp(5rem, 9vw, 8rem);
+  }
+  .delivery-strip--compact {
+    padding-block: 0 clamp(4rem, 7vw, 6rem);
+  }
+  .delivery-strip__row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: clamp(1.5rem, 4vw, 3rem);
+    padding: clamp(1.75rem, 3vw, 2.5rem) 0;
+    border-top: 1px solid var(--ink-faint);
+    border-bottom: 1px solid var(--ink-faint);
+    color: var(--petrol);
+  }
+  .delivery-strip__copy p {
+    margin: 0.5rem 0 0;
+    color: var(--ink-soft);
+  }
+  .delivery-strip__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: flex-end;
+  }
+  @media (max-width: 767px) {
+    .delivery-strip__row {
+      grid-template-columns: 1fr;
+    }
+    .delivery-strip__actions {
+      justify-content: flex-start;
+    }
+  }
+</style>

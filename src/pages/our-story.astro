@@ -1,0 +1,14 @@
+---
+import Layout from '../layouts/Layout.astro';
+import StoryExperience from '../components/StoryExperience.tsx';
+import '../styles/story-contact.css';
+---
+
+<Layout
+  title="Our Story"
+  page="story"
+  navTone="light"
+  description="The story of Zin & Gin, a vegetarian Indian restaurant and botanical bar in Rotterdam, from Urban Tapri to Hotel Teleport."
+>
+  <StoryExperience client:load />
+</Layout>

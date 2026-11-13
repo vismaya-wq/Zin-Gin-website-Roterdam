@@ -115,6 +115,78 @@ function initReveals() {
   });
 }
 
+function initSlideFood() {
+  const seam = document.querySelector<HTMLElement>('[data-section-seam]');
+
+  document.querySelectorAll<HTMLElement>('[data-slide-food]').forEach((el) => {
+    const side = el.dataset.slideFood === 'right' ? 'right' : 'left';
+    const fromX = side === 'left' ? -110 : 110;
+    const fromY = el.hasAttribute('data-slide-food-seam') ? 72 : 48;
+    const trigger = el.hasAttribute('data-slide-food-seam')
+      ? (el.closest('.reviews') ?? seam ?? el)
+      : (el.closest('section') ?? el);
+
+    gsap.set(el, { opacity: 0, x: fromX, y: fromY });
+    gsap.to(el, {
+      opacity: 1,
+      x: 0,
+      y: 0,
+      duration: 1.35,
+      ease: 'power3.out',
+      scrollTrigger: {
+        trigger,
+        start: 'top 90%',
+        once: true,
+      },
+    });
+
+    if (el.hasAttribute('data-slide-food-seam')) {
+      const reviews = el.closest('.reviews');
+      const whatsOn = document.querySelector<HTMLElement>('#whats-on');
+      const scrollLayer = el.querySelector<HTMLElement>('[data-corner-scroll]');
+      if (reviews && whatsOn && scrollLayer) {
+        const travelY = () => {
+          const start = reviews.getBoundingClientRect().bottom + window.scrollY;
+          const end = whatsOn.getBoundingClientRect().top + window.scrollY;
+          return Math.max(0, end - start - 48);
+        };
+
+        gsap.fromTo(
+          scrollLayer,
+          { y: 0 },
+          {
+            y: travelY,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: reviews,
+              start: 'bottom bottom',
+              endTrigger: whatsOn,
+              end: 'top 85%',
+              scrub: 0.65,
+              invalidateOnRefresh: true,
+            },
+          },
+        );
+
+        gsap.fromTo(
+          scrollLayer,
+          { opacity: 1 },
+          {
+            opacity: 0,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: whatsOn,
+              start: 'top 92%',
+              end: 'top 72%',
+              scrub: 0.35,
+            },
+          },
+        );
+      }
+    }
+  });
+}
+
 function initParallax() {
   document.querySelectorAll<HTMLElement>('[data-parallax]').forEach((el) => {
     const amount = Number(el.dataset.parallax || 0.12);
@@ -209,6 +281,10 @@ export function initMotion() {
   initNav();
   if (reduced) {
     document.documentElement.classList.remove('js-motion');
+    document.querySelectorAll<HTMLElement>('[data-slide-food]').forEach((el) => {
+      el.style.opacity = '0.4';
+      el.style.transform = 'none';
+    });
     return;
   }
 
@@ -216,6 +292,7 @@ export function initMotion() {
   const mm = gsap.matchMedia();
   initHorizontal(mm);
   initReveals();
+  initSlideFood();
   initParallax();
 
   document.fonts?.ready.then(() => ScrollTrigger.refresh());

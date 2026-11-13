@@ -1,0 +1,101 @@
+---
+import { LOCAL_IMAGES } from '../data/images';
+
+/** Outlined naan plate art along page margins — scrolls with the page. */
+---
+
+<div class="page-side-doodles" aria-hidden="true">
+  <img
+    class="side-plate side-plate--left side-plate--pos-1"
+    src={LOCAL_IMAGES.cornerPlateOutline}
+    alt=""
+    width="480"
+    height="480"
+    loading="lazy"
+    decoding="async"
+  />
+  <img
+    class="side-plate side-plate--right side-plate--pos-2"
+    src={LOCAL_IMAGES.cornerPlateOutline}
+    alt=""
+    width="480"
+    height="480"
+    loading="lazy"
+    decoding="async"
+  />
+</div>
+
+<style is:global>
+  .page-shell {
+    position: relative;
+    overflow-x: clip;
+  }
+  .page-shell > main {
+    position: relative;
+    z-index: 1;
+  }
+
+  .page-side-doodles {
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .side-plate {
+    position: absolute;
+    width: clamp(5rem, 14vw, 12rem);
+    height: auto;
+    aspect-ratio: 245 / 196;
+    object-fit: contain;
+    mix-blend-mode: screen;
+    opacity: 0.06;
+    transform: rotate(var(--side-rot, 0deg));
+  }
+
+  .side-plate--left {
+    left: clamp(0rem, 1vw, 0.75rem);
+  }
+  .side-plate--right {
+    right: clamp(0rem, 1vw, 0.75rem);
+    transform: rotate(var(--side-rot, 0deg)) scaleX(-1);
+  }
+
+  .side-plate--pos-1 {
+    top: 18%;
+    --side-rot: -10deg;
+  }
+  .side-plate--pos-2 {
+    top: 52%;
+    --side-rot: 8deg;
+  }
+
+  @media (max-width: 900px) {
+    .side-plate {
+      width: clamp(4rem, 18vw, 7rem);
+      opacity: 0.06;
+    }
+    .side-plate--pos-2 {
+      display: none;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .page-side-doodles {
+      display: none;
+    }
+  }
+
+  @media (min-width: 1400px) {
+    .side-plate {
+      width: clamp(6.5rem, 10vw, 13rem);
+    }
+    .side-plate--left {
+      left: max(0.25rem, calc((100% - var(--max)) / 2 - 8rem));
+    }
+    .side-plate--right {
+      right: max(0.25rem, calc((100% - var(--max)) / 2 - 8rem));
+    }
+  }
+</style>

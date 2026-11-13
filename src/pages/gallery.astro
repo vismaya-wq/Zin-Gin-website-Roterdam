@@ -1,0 +1,467 @@
+---
+export const prerender = false;
+
+import Layout from '../layouts/Layout.astro';
+import { isSupabaseConfigured } from '../lib/supabase/env';
+import { createSupabaseAnonClient } from '../lib/supabase/anon';
+import { getGalleryRecords } from '../server/db';
+import { sbGetGalleryRecords } from '../server/supabase-cms';
+import type { GalleryRecord } from '../data/ops';
+
+let GALLERY: GalleryRecord[] = getGalleryRecords();
+if (isSupabaseConfigured()) {
+  try {
+    GALLERY = await sbGetGalleryRecords(createSupabaseAnonClient());
+  } catch {
+    GALLERY = [];
+  }
+}
+
+function galleryAlt(item: GalleryRecord) {
+  return item.caption?.trim() || item.alt?.trim() || 'Zin & Gin gallery photograph';
+}
+---
+
+<Layout
+  title="Gallery"
+  page="gallery"
+  navTone="light"
+  description="Photos from Zin & Gin — breakfast buffets, South Indian plates, the dining room and bar at Teleport Hotel, Rotterdam."
+>
+  <section class="gallery-editorial" aria-labelledby="gallery-title">
+    <header class="gallery-editorial__mast">
+      <div class="gallery-editorial__rule" aria-hidden="true"></div>
+      <div class="gallery-editorial__intro">
+        <p class="gallery-editorial__brand">Zin &amp; Gin · Teleport Hotel</p>
+        <h1 id="gallery-title" class="gallery-editorial__title-page">Gallery</h1>
+        <p class="gallery-editorial__deck">
+          Real food, the dining room and the bar — an editorial look at life at the restaurant.
+        </p>
+      </div>
+      <nav class="gallery-editorial__sub" aria-label="Gallery sections">
+        <span class="is-on">Photographs</span>
+        <a href="/menu">Menu</a>
+        <a href="/reserve">Reserve</a>
+      </nav>
+      <div class="gallery-editorial__rule" aria-hidden="true"></div>
+    </header>
+
+    {
+      GALLERY.length === 0 ? (
+        <div class="gallery-editorial__empty container">
+          <p>Gallery photographs will appear here soon.</p>
+          <a class="link-arrow" href="/menu">
+            Browse the menu <span class="arrow">→</span>
+          </a>
+        </div>
+      ) : (
+        <div class="gallery-editorial__masonry" data-reveal="fade">
+          {GALLERY.map((item, index) => (
+            <article class="gallery-editorial__piece">
+              <button
+                type="button"
+                class:list={[
+                  'gallery-editorial__open',
+                  item.wide && 'gallery-editorial__open--landscape',
+                  item.tall && 'gallery-editorial__open--portrait',
+                ]}
+                data-gallery-open
+                data-index={index}
+                aria-label={item.caption?.trim() ? `View larger: ${item.caption}` : 'View larger'}
+              >
+                <img src={item.src} alt={galleryAlt(item)} loading={index < 6 ? 'eager' : 'lazy'} decoding="async" />
+                {item.caption?.trim() ? (
+                  <span class="gallery-editorial__hover-cap">{item.caption}</span>
+                ) : null}
+              </button>
+            </article>
+          ))}
+        </div>
+      )
+    }
+
+    <footer class="gallery-editorial__foot">
+      <div class="gallery-editorial__rule" aria-hidden="true"></div>
+      <div class="gallery-editorial__foot-inner">
+        <a class="gallery-editorial__more" href="/menu">
+          See the menu &amp; order for pickup <span class="arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+    </footer>
+  </section>
+
+  <dialog class="gallery-lightbox" id="gallery-lightbox" aria-label="Gallery image">
+    <form method="dialog">
+      <button class="gallery-lightbox__close" type="submit" value="close" aria-label="Close">×</button>
+    </form>
+    <figure>
+      <img id="gallery-lightbox-img" src="" alt="" />
+      <figcaption id="gallery-lightbox-cap"></figcaption>
+    </figure>
+    <div class="gallery-lightbox__nav">
+      <button type="button" class="gallery-lightbox__prev" data-gallery-prev aria-label="Previous image">←</button>
+      <button type="button" class="gallery-lightbox__next" data-gallery-next aria-label="Next image">→</button>
+    </div>
+  </dialog>
+  <script id="gallery-data" type="application/json" set:html={JSON.stringify(GALLERY)} />
+</Layout>
+
+<script>
+  const GALLERY = JSON.parse(document.getElementById('gallery-data')!.textContent!);
+
+  const dialog = document.querySelector<HTMLDialogElement>('#gallery-lightbox');
+  const img = document.querySelector<HTMLImageElement>('#gallery-lightbox-img');
+  const cap = document.querySelector('#gallery-lightbox-cap');
+  let index = 0;
+
+  const show = (next: number) => {
+    if (!GALLERY.length) return;
+    index = (next + GALLERY.length) % GALLERY.length;
+    const item = GALLERY[index];
+    if (!dialog || !img || !cap) return;
+    img.src = item.src;
+    img.alt = item.caption?.trim() || item.alt || 'Gallery photograph';
+    cap.textContent = item.caption?.trim() || '';
+  };
+
+  document.querySelectorAll('[data-gallery-open]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const i = Number((btn as HTMLElement).dataset.index);
+      show(i);
+      dialog?.showModal();
+    });
+  });
+
+  document.querySelector('[data-gallery-prev]')?.addEventListener('click', () => show(index - 1));
+  document.querySelector('[data-gallery-next]')?.addEventListener('click', () => show(index + 1));
+
+  dialog?.addEventListener('click', (event) => {
+    if (event.target === dialog) dialog.close();
+  });
+
+  dialog?.addEventListener('keydown', (event) => {
+    if (event.key === 'ArrowLeft') show(index - 1);
+    if (event.key === 'ArrowRight') show(index + 1);
+  });
+</script>
+
+<style>
+  .gallery-editorial {
+    --ge-ink: #141414;
+    --ge-muted: #7a7a7a;
+    --ge-line: rgba(20, 20, 20, 0.12);
+    --ge-paper: #f7f6f3;
+    background: var(--ge-paper);
+    color: var(--ge-ink);
+    padding-bottom: clamp(3rem, 8vw, 5rem);
+  }
+
+  .gallery-editorial__rule {
+    height: 1px;
+    background: var(--ge-line);
+  }
+
+  .gallery-editorial__mast {
+    padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1.25rem, 5vw, 3.5rem) 0;
+  }
+
+  .gallery-editorial__intro {
+    display: grid;
+    gap: 0.65rem;
+    padding: clamp(1.75rem, 4vw, 2.75rem) 0 clamp(1.25rem, 3vw, 1.75rem);
+    text-align: center;
+    max-width: 36rem;
+    margin-inline: auto;
+  }
+
+  .gallery-editorial__brand {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(0.95rem, 2vw, 1.05rem);
+    font-style: italic;
+    letter-spacing: 0.02em;
+    color: var(--ge-muted);
+  }
+
+  .gallery-editorial__title-page {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(2.5rem, 7vw, 4.25rem);
+    font-weight: 400;
+    letter-spacing: -0.03em;
+    line-height: 0.95;
+  }
+
+  .gallery-editorial__deck {
+    margin: 0;
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: var(--ge-muted);
+  }
+
+  .gallery-editorial__sub {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.35rem 1.75rem;
+    padding: 0.85rem 0 1.1rem;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .gallery-editorial__sub a,
+  .gallery-editorial__sub span {
+    color: var(--ge-muted);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .gallery-editorial__sub a:hover {
+    color: var(--ge-ink);
+  }
+
+  .gallery-editorial__sub .is-on {
+    color: var(--ge-ink);
+  }
+
+  .gallery-editorial__masonry {
+    column-count: 4;
+    column-gap: clamp(1rem, 2.2vw, 1.85rem);
+    padding: clamp(2rem, 5vw, 3.5rem) clamp(1.25rem, 5vw, 3.5rem) 0;
+  }
+
+  .gallery-editorial__piece {
+    break-inside: avoid;
+    margin-bottom: clamp(1rem, 2.5vw, 1.5rem);
+  }
+
+  .gallery-editorial__open {
+    position: relative;
+    display: block;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background: none;
+    cursor: zoom-in;
+    overflow: hidden;
+  }
+
+  .gallery-editorial__open img {
+    display: block;
+    width: 100%;
+    height: auto;
+    vertical-align: middle;
+    transition: transform 0.7s var(--ease-out), filter 0.5s;
+  }
+
+  .gallery-editorial__open:hover img,
+  .gallery-editorial__open:focus-visible img {
+    transform: scale(1.02);
+    filter: contrast(1.03) brightness(0.88);
+  }
+
+  .gallery-editorial__hover-cap {
+    position: absolute;
+    inset: auto 0 0;
+    padding: clamp(0.85rem, 2vw, 1.15rem) clamp(0.75rem, 2vw, 1rem);
+    font-family: var(--serif);
+    font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+    font-style: italic;
+    line-height: 1.35;
+    color: var(--ivory, #f7f6f3);
+    text-align: left;
+    background: linear-gradient(0deg, rgba(4, 57, 59, 0.88) 0%, rgba(4, 57, 59, 0.45) 70%, transparent 100%);
+    opacity: 0;
+    transform: translateY(0.35rem);
+    transition:
+      opacity 0.35s var(--ease-out),
+      transform 0.35s var(--ease-out);
+    pointer-events: none;
+  }
+
+  .gallery-editorial__open:hover .gallery-editorial__hover-cap,
+  .gallery-editorial__open:focus-visible .gallery-editorial__hover-cap {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gallery-editorial__hover-cap {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .gallery-editorial__open--landscape img {
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+  }
+
+  .gallery-editorial__open--portrait img {
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+  }
+
+  .gallery-editorial__cat {
+    margin: 0.7rem 0 0.3rem;
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ge-muted);
+  }
+
+  .gallery-editorial__headline {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(1.05rem, 1.8vw, 1.35rem);
+    font-weight: 400;
+    line-height: 1.3;
+    color: var(--ge-ink);
+  }
+
+  .gallery-editorial__headline em {
+    font-style: italic;
+  }
+
+  .gallery-editorial__empty {
+    padding: 4rem 1.5rem;
+    text-align: center;
+  }
+
+  .gallery-editorial__foot {
+    padding: 0 clamp(1.25rem, 5vw, 3.5rem);
+  }
+
+  .gallery-editorial__foot-inner {
+    padding: 1.35rem 0 0;
+  }
+
+  .gallery-editorial__more {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.85rem 1.35rem;
+    border-radius: 999px;
+    font-family: var(--serif);
+    font-size: clamp(1.15rem, 2.4vw, 1.45rem);
+    font-style: italic;
+    font-weight: 500;
+    color: var(--petrol);
+    text-decoration: none;
+    background: rgba(6, 76, 79, 0.08);
+    box-shadow: inset 0 0 0 1px rgba(6, 76, 79, 0.14);
+    transition: background 0.35s var(--ease-out), color 0.35s var(--ease-out), transform 0.35s var(--ease-out);
+  }
+
+  .gallery-editorial__more .arrow {
+    font-style: normal;
+    font-size: 1.1em;
+  }
+
+  .gallery-editorial__more:hover,
+  .gallery-editorial__more:focus-visible {
+    color: var(--ivory);
+    background: var(--petrol);
+    transform: translateY(-1px);
+  }
+
+  .gallery-lightbox {
+    position: relative;
+    width: min(920px, calc(100% - 2rem));
+    max-height: calc(100% - 2rem);
+    padding: 0;
+    border: 0;
+    border-radius: 4px;
+    background: #111;
+    color: #f7f6f3;
+    overflow: hidden;
+  }
+
+  .gallery-lightbox::backdrop {
+    background: rgba(10, 10, 10, 0.82);
+  }
+
+  .gallery-lightbox figure {
+    margin: 0;
+  }
+
+  .gallery-lightbox img {
+    display: block;
+    width: 100%;
+    max-height: min(72vh, 720px);
+    object-fit: contain;
+    background: #0a0a0a;
+  }
+
+  .gallery-lightbox figcaption {
+    padding: 0.85rem 1.1rem 1.1rem;
+    font-family: var(--serif);
+    font-size: 1rem;
+    font-style: italic;
+  }
+
+  .gallery-lightbox__close {
+    position: absolute;
+    top: 0.65rem;
+    right: 0.65rem;
+    z-index: 2;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    font-size: 1.6rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .gallery-lightbox__nav {
+    position: absolute;
+    inset: 50% 0 auto;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 0.5rem;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+
+  .gallery-lightbox__prev,
+  .gallery-lightbox__next {
+    pointer-events: auto;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.14);
+    color: #fff;
+    font-size: 1.1rem;
+    cursor: pointer;
+  }
+
+  @media (max-width: 1100px) {
+    .gallery-editorial__masonry {
+      column-count: 3;
+    }
+  }
+
+  @media (max-width: 780px) {
+    .gallery-editorial__masonry {
+      column-count: 2;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .gallery-editorial__masonry {
+      column-count: 1;
+    }
+
+    .gallery-editorial__sub {
+      gap: 0.75rem 1.25rem;
+    }
+  }
+</style>

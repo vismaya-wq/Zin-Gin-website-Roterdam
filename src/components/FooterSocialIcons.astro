@@ -1,0 +1,88 @@
+---
+import { SITE } from '../data/site';
+
+const items = [
+  { label: 'Instagram', href: SITE.instagram, icon: 'instagram', class: 'socials__ig' },
+  { label: 'WhatsApp', href: SITE.whatsapp, icon: 'whatsapp', class: 'socials__wa' },
+  { label: 'Email', href: `mailto:${SITE.email}`, icon: 'email', class: 'socials__mail' },
+  { label: 'Call', href: SITE.phoneHref, icon: 'phone', class: 'socials__tel' },
+];
+---
+
+<div class="socials" role="list">
+  {
+    items.map((item) => (
+      <a
+        class:list={[item.class]}
+        href={item.href}
+        aria-label={item.label}
+        target={item.href.startsWith('http') ? '_blank' : undefined}
+        rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+        role="listitem"
+      >
+        {item.icon === 'instagram' && (
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.5" />
+            <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.5" />
+            <circle cx="17.2" cy="6.8" r="1" fill="currentColor" />
+          </svg>
+        )}
+        {item.icon === 'whatsapp' && (
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.6-1.2A9 9 0 1 0 12 3z" stroke="currentColor" stroke-width="1.5" />
+            <path d="M9.2 9.8c.2-.5.4-.5.7-.5h.6c.2 0 .4 0 .5.4l.8 1.9c.1.2.1.4 0 .6l-.5.6c-.1.1-.1.2 0 .4.6 1.1 1.5 2 2.6 2.6.2.1.3.1.4 0l.6-.5c.2-.1.4-.1.6 0l1.9.8c.4.2.4.4.4.6v.6c0 .3-.1.5-.5.7-1 .5-2.1.4-3.2-.2-1.6-.8-2.9-2.1-3.7-3.7-.6-1.1-.7-2.2-.2-3.2z" fill="currentColor" opacity="0.9" />
+          </svg>
+        )}
+        {item.icon === 'email' && (
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <rect x="3" y="6" width="18" height="12" rx="2" stroke="currentColor" stroke-width="1.5" />
+            <path d="M3 8l9 6 9-6" stroke="currentColor" stroke-width="1.5" />
+          </svg>
+        )}
+        {item.icon === 'phone' && (
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M6.5 4h3l1.5 4-2 1.5a11 11 0 0 0 5 5L17 12.5l4 1.5v3A2 2 0 0 1 19 19c-8 0-13-5-13-13a2 2 0 0 1 2-2z" stroke="currentColor" stroke-width="1.5" />
+          </svg>
+        )}
+      </a>
+    ))
+  }
+</div>
+
+<style>
+  .socials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    margin-top: 0.35rem;
+  }
+  .socials a {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    border: 0;
+    transition: transform 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out);
+  }
+  .socials__ig {
+    color: #fff;
+    background: linear-gradient(135deg, #f58529, #dd2a7b 45%, #8134af 70%, #515bd4);
+  }
+  .socials__wa {
+    color: #fff;
+    background: #25d366;
+  }
+  .socials__mail {
+    color: #fff;
+    background: #4285f4;
+  }
+  .socials__tel {
+    color: #fff;
+    background: var(--terra);
+  }
+  .socials a:hover {
+    transform: translateY(-3px) scale(1.06);
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.22);
+  }
+</style>

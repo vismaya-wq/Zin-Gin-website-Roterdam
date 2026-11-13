@@ -1,0 +1,14 @@
+---
+export const prerender = false;
+
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import AdminApp from '../../components/AdminApp.tsx';
+import { resolveStaffSession } from '../../server/staff-auth';
+
+const session = await resolveStaffSession(Astro.cookies, Astro.request);
+if (!session) return Astro.redirect('/admin');
+---
+
+<AdminLayout title="Reservations">
+  <AdminApp client:load role={session.role} name={session.name} section="bookings" />
+</AdminLayout>

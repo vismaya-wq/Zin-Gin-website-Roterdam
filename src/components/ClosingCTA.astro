@@ -1,8 +1,11 @@
 ---
 import { IMAGES, photo, srcset } from '../data/images';
+import { SITE } from '../data/site';
+import BrandDoodles from './BrandDoodles.astro';
 ---
 
-<section class="closing on-dark" aria-labelledby="closing-title">
+<section class="closing on-dark" data-surface="dark" aria-labelledby="closing-title">
+  <BrandDoodles />
   <div class="closing__media media" aria-hidden="true">
     <img
       data-parallax="0.25"
@@ -17,12 +20,14 @@ import { IMAGES, photo, srcset } from '../data/images';
 
   <div class="container container--sym closing__inner">
     <h2 id="closing-title" class="display" data-reveal="lines">
-      <span class="line"><span>One table.</span></span>
-      <span class="line"><span><em>Plenty to share.</em></span></span>
+      <span class="line"><span>Make it a gathering</span></span>
+      <span class="line"><span><em>worth remembering.</em></span></span>
     </h2>
+    <p class="closing__copy" data-reveal="fade">
+      From intimate celebrations to group gatherings and catering, bring your people together over authentic Indian flavours, botanical drinks and good company at Zin &amp; Gin.
+    </p>
     <div class="closing__cta" data-reveal="fade">
-      <a class="btn btn--light" href="/reserve#table">Reserve a Table <span class="arrow">→</span></a>
-      <p>Zin &amp; Gin · Schiekade 730 · Rotterdam</p>
+      <a class="btn btn--light" href={SITE.whatsappEvents} target="_blank" rel="noopener noreferrer">Enquire on WhatsApp <span class="arrow arrow--diag">↗</span></a>
     </div>
   </div>
 </section>
@@ -62,6 +67,13 @@ import { IMAGES, photo, srcset } from '../data/images';
     display: grid;
     justify-items: center;
     gap: 1.5rem;
+  }
+  .closing__copy {
+    max-width: 38rem;
+    margin: 0;
+    font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+    line-height: 1.6;
+    color: var(--on-dark-soft);
   }
   .closing__cta p {
     margin: 0;

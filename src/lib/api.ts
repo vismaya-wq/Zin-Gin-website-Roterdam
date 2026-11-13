@@ -1,16 +1,20 @@
 /**
- * Submission layer. Both functions currently resolve locally; point them at
- * the reservation system / POS endpoint when the backend exists.
+ * Submission layer for manager-review workflows. Point `PUBLIC_API_BASE` at your
+ * backend when reservations and takeaway requests should reach the team.
  */
-export interface ReservationRequest {
+import type { SeatingId } from '../data/hotel';
+
+export interface HotelSlotBookingRequest {
+  floor: string;
+  roomNumber: string;
   date: string;
   time: string;
   guests: number;
+  seatingPreference: SeatingId;
   name: string;
   phone: string;
-  email: string;
-  hotelGuest: boolean;
-  roomNumber?: string;
+  email?: string;
+  specialRequest?: string;
 }
 
 export interface PickupOrderRequest {
@@ -20,8 +24,9 @@ export interface PickupOrderRequest {
   total: number;
   name: string;
   phone: string;
-  email: string;
+  email?: string;
   pickupTime: string;
+  specialInstructions?: string;
 }
 
 export interface SubmitResult {
@@ -45,5 +50,7 @@ async function submit(path: string, payload: unknown): Promise<SubmitResult> {
   return { ok: true, reference: `ZG-${Math.random().toString(36).slice(2, 7).toUpperCase()}` };
 }
 
-export const submitReservation = (request: ReservationRequest) => submit('/reservations', request);
-export const submitPickupOrder = (request: PickupOrderRequest) => submit('/orders/pickup', request);
+export const submitHotelSlotBooking = (request: HotelSlotBookingRequest) =>
+  submit('/bookings/hotel-slot', request);
+
+export const submitPickupOrder = (request: PickupOrderRequest) => submit('/orders/takeaway', request);

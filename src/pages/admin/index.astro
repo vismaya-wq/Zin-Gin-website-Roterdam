@@ -1,0 +1,18 @@
+---
+export const prerender = false;
+
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import AdminLogin from '../../components/AdminLogin.tsx';
+import AdminDashboard from '../../components/AdminDashboard.tsx';
+import { resolveStaffSession } from '../../server/staff-auth';
+
+const session = await resolveStaffSession(Astro.cookies, Astro.request);
+---
+
+<AdminLayout title={session ? 'Dashboard' : 'Sign in'}>
+  {session ? (
+    <AdminDashboard client:load role={session.role} name={session.name} />
+  ) : (
+    <AdminLogin client:load />
+  )}
+</AdminLayout>

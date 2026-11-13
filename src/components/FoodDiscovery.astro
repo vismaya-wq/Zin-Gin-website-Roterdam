@@ -4,13 +4,13 @@ import { IMAGES } from '../data/images';
 
 const dishes = [
   { name: 'Masala Dosa', line: 'Crisp. Comforting. Made for dipping.', image: IMAGES.masalaDosa, alt: 'A golden masala dosa with chutneys and sambar' },
-  { name: 'Paneer Special', line: 'Rich spices. Soft paneer. Serious comfort food.', image: IMAGES.paneerTikka, alt: 'Paneer tikka with peppers and onion on a sizzling platter' },
-  { name: 'Biryani', line: 'Fragrant rice, layered spice and a table favourite.', image: IMAGES.biryaniDark, alt: 'Vegetable biryani served in copper bowls' },
-  { name: 'Chaat & Street Favourites', line: 'Bright, tangy and difficult to stop at one.', image: IMAGES.chaat, alt: 'Chaat topped with yoghurt, chutney and sev' },
+  { name: 'Veg Manchurian', line: 'Wok heat, Indo-Chinese spice and serious comfort.', image: IMAGES.paneerTikka, alt: 'Chilli paneer bites on a plate' },
+  { name: 'Chole Bhatura', line: 'Fragrant rice, layered spice and a table favourite.', image: IMAGES.biryaniDark, alt: 'Vegetable biryani served in copper bowls' },
+  { name: 'Bombay Botanist G&T', line: 'Botanical gin, tonic and cardamom — the Gin in Zin & Gin.', image: IMAGES.cocktailDark, alt: 'Bombay Botanist G&T in a faceted glass' },
 ];
 ---
 
-<section class="kitchen on-dark" id="kitchen" aria-labelledby="kitchen-title" data-hscroll>
+<section class="kitchen on-dark" id="kitchen" data-surface="dark" aria-labelledby="kitchen-title" data-hscroll>
   <div class="kitchen__track" data-hscroll-track>
     <header class="kitchen__intro">
       <p class="eyebrow" data-reveal="fade">From our kitchen</p>
@@ -19,7 +19,16 @@ const dishes = [
         <span class="line"><span><em>craving today?</em></span></span>
       </h2>
       <p class="lede" data-reveal="fade">Four places to start — the rest is on the menu.</p>
-      <a class="link-arrow" href="/menu" data-reveal="fade">See the Full Menu <span class="arrow">→</span></a>
+      <div class="kitchen__links" data-reveal="fade">
+        <a class="kitchen__link" href="/gallery">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.5" /><circle cx="8.5" cy="10" r="1.5" fill="currentColor" /><path d="M3 16l5-5 4 4 3-3 6 6" stroke="currentColor" stroke-width="1.5" /></svg>
+          <span>View the gallery <span class="arrow">→</span></span>
+        </a>
+        <a class="kitchen__link" href="/menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 4h12v16H6z" stroke="currentColor" stroke-width="1.5" /><path d="M9 8h6M9 12h6M9 16h4" stroke="currentColor" stroke-width="1.5" /></svg>
+          <span>See the full menu <span class="arrow">→</span></span>
+        </a>
+      </div>
     </header>
 
     {dishes.map((dish, index) => <DishFeature index={index} {...dish} />)}
@@ -41,6 +50,7 @@ const dishes = [
     position: relative;
     background: var(--petrol);
     overflow: hidden;
+    max-width: 100%;
   }
   .kitchen__track {
     display: flex;
@@ -58,8 +68,40 @@ const dishes = [
     justify-items: start;
     width: clamp(320px, 36vw, 600px);
   }
+  .kitchen__intro .h1 {
+    line-height: 1.2;
+    padding-right: 0.35em;
+    padding-bottom: 0.12em;
+    overflow: visible;
+  }
+  .kitchen__intro .line {
+    overflow: visible;
+    padding-right: 0.42em;
+    padding-bottom: 0.28em;
+    margin-bottom: -0.06em;
+  }
   .kitchen__intro .h1 em {
     color: #efe3cf;
+  }
+  .kitchen__links {
+    display: grid;
+    gap: 0.65rem;
+    width: min(100%, 18rem);
+  }
+  .kitchen__link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.55rem 0;
+    border-bottom: 1px solid var(--on-dark-faint);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-size: 0.72rem;
+  }
+  .kitchen__link svg {
+    flex-shrink: 0;
+    opacity: 0.85;
   }
   .kitchen__end {
     flex: none;

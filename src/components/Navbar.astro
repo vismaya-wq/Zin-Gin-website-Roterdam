@@ -3,11 +3,16 @@ import { NAV } from '../data/site';
 
 interface Props {
   tone: 'light' | 'dark';
-  current: 'home' | 'menu' | 'reserve';
+  current: 'home' | 'menu' | 'reserve' | 'gallery' | 'story' | 'contact';
 }
 
 const { tone, current } = Astro.props;
-const isCurrent = (href: string) => (href === '/' && current === 'home') || (href === '/menu' && current === 'menu');
+const isCurrent = (href: string) =>
+  (href === '/' && current === 'home') ||
+  (href === '/menu' && current === 'menu') ||
+  (href === '/gallery' && current === 'gallery') ||
+  (href === '/our-story' && current === 'story') ||
+  (href === '/contact' && current === 'contact');
 ---
 
 <header class:list={['nav', `nav--${tone}`]} data-nav>
@@ -16,7 +21,7 @@ const isCurrent = (href: string) => (href === '/' && current === 'home') || (hre
       <img src="/zin-gin-badge.png" alt="" width="56" height="56" />
       <span class="nav__word">
         <span>Zin &amp; Gin</span>
-        <small>Rotterdam</small>
+        <small>Vegetarian Restaurant &amp; Bar</small>
       </span>
     </a>
 
@@ -31,7 +36,7 @@ const isCurrent = (href: string) => (href === '/' && current === 'home') || (hre
     </nav>
 
     <div class="nav__actions">
-      <a href="/reserve#table" class="nav__reserve" aria-current={current === 'reserve' ? 'page' : undefined}>
+      <a href="/reserve" class="nav__reserve" aria-current={current === 'reserve' ? 'page' : undefined}>
         Reserve <span class="arrow" aria-hidden="true">→</span>
       </a>
       <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" data-nav-toggle>
@@ -54,7 +59,7 @@ const isCurrent = (href: string) => (href === '/' && current === 'home') || (hre
     </nav>
     <div class="nav__sheet-foot">
       <p>Schiekade 730 · Inside Teleport Hotel</p>
-      <a class="btn btn--light" href="/reserve#table">Reserve a Table <span class="arrow">→</span></a>
+      <a class="btn btn--light" href="/reserve">Reserve a Table <span class="arrow">→</span></a>
     </div>
   </div>
 </header>
@@ -146,13 +151,15 @@ const isCurrent = (href: string) => (href === '/' && current === 'home') || (hre
     line-height: 1;
   }
   .nav__word small {
-    margin-top: 0.3rem;
+    max-width: 11.5rem;
+    margin-top: 0.28rem;
     font-family: var(--sans);
     font-size: 0.58rem;
     font-weight: 600;
-    letter-spacing: 0.3em;
+    letter-spacing: 0.08em;
+    line-height: 1.25;
     text-transform: uppercase;
-    opacity: 0.7;
+    opacity: 0.78;
   }
 
   .nav__links {
@@ -208,23 +215,24 @@ const isCurrent = (href: string) => (href === '/' && current === 'home') || (hre
     height: 46px;
     padding: 0 1.4rem;
     border-radius: 999px;
-    box-shadow: inset 0 0 0 1px currentColor;
+    background: var(--terra);
+    color: var(--ivory);
+    box-shadow: 0 0 0 0 rgba(199, 101, 60, 0.45);
     font-size: 0.75rem;
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-    transition:
-      background 0.4s var(--ease-out),
-      color 0.4s var(--ease-out),
-      box-shadow 0.4s var(--ease-out);
+    animation: reserve-glow 2.8s ease-in-out infinite;
+    transition: transform 0.45s var(--ease-out), background 0.45s var(--ease-out), color 0.45s var(--ease-out);
   }
   .nav__reserve:hover {
-    background: var(--fg);
-    color: var(--nav-reserve-hover, var(--petrol));
+    background: var(--ivory);
+    color: var(--terra);
+    transform: scale(1.04);
   }
-  .nav--dark .nav__reserve:hover,
-  .nav:global(.is-scrolled) .nav__reserve:hover {
-    color: var(--ivory);
+  @keyframes reserve-glow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(199, 101, 60, 0.45); }
+    70% { box-shadow: 0 0 0 8px rgba(199, 101, 60, 0); }
   }
   .nav__reserve .arrow {
     transition: transform 0.5s var(--ease-out);
@@ -346,6 +354,13 @@ const isCurrent = (href: string) => (href === '/' && current === 'home') || (hre
     .nav__toggle {
       display: grid;
     }
+    .nav__word {
+      display: none;
+    }
+    .nav__brand img {
+      width: 48px;
+      height: 48px;
+    }
   }
   @media (max-width: 767px) {
     .nav__brand img {
@@ -364,9 +379,46 @@ const isCurrent = (href: string) => (href === '/' && current === 'home') || (hre
       height: 42px;
     }
   }
-  @media (max-width: 380px) {
-    .nav__word small {
-      display: none;
+  @media (max-width: 430px) {
+    .nav__inner {
+      padding-inline: max(0.85rem, var(--gutter));
+      gap: 0.35rem;
     }
+    .nav__brand {
+      gap: 0.55rem;
+      min-width: 0;
+    }
+    .nav__word {
+      font-size: 1.05rem;
+    }
+    .nav__word small {
+      font-size: 0.5rem;
+      letter-spacing: 0.06em;
+      max-width: 9rem;
+    }
+    .nav__actions {
+      gap: 0.45rem;
+    }
+    .nav__reserve {
+      height: 38px;
+      padding: 0 0.75rem;
+      font-size: 0.62rem;
+      letter-spacing: 0.12em;
+    }
+    .nav__toggle {
+      width: 38px;
+      height: 38px;
+    }
+    .nav__sheet {
+      padding-inline: max(0.85rem, var(--gutter));
+    }
+    .nav__sheet nav a {
+      gap: 0.65rem;
+      padding-block: 0.55rem;
+      font-size: clamp(2rem, 10vw, 2.65rem);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .nav__reserve { animation: none; }
   }
 </style>

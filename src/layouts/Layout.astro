@@ -4,9 +4,10 @@ import '../styles/interactive.css';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import FloatingFoodCTA from '../components/FloatingFoodCTA.tsx';
-import OrderDrawer from '../components/OrderDrawer.tsx';
+import Preloader from '../components/Preloader.astro';
+import PageSideDoodles from '../components/PageSideDoodles.astro';
 
-export type PageKey = 'home' | 'menu' | 'reserve';
+export type PageKey = 'home' | 'menu' | 'reserve' | 'gallery' | 'story' | 'contact';
 
 interface Props {
   title: string;
@@ -33,7 +34,6 @@ const fullTitle = page === 'home' ? `Zin & Gin · Vegetarian Indian Restaurant &
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preconnect" href="https://images.unsplash.com" />
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Manrope:wght@400;500;600;700&display=swap"
@@ -62,39 +62,21 @@ const fullTitle = page === 'home' ? `Zin & Gin · Vegetarian Indian Restaurant &
     />
   </head>
   <body data-page={page}>
+    <Preloader />
     <a class="skip-link" href="#main">Skip to content</a>
     <Navbar tone={navTone} current={page} />
-    <main id="main">
-      <slot />
-    </main>
-    <Footer />
-    <FloatingFoodCTA client:load page={page} />
-    <OrderDrawer client:load />
+    <div class="page-shell">
+      <PageSideDoodles />
+      <main id="main">
+        <slot />
+      </main>
+      <Footer />
+    </div>
+    <FloatingFoodCTA client:load />
 
     <script>
       import { initMotion } from '../lib/motion';
-      import { $cart, addItem, hydrateCart } from '../lib/cart';
-
-      hydrateCart();
       initMotion();
-
-      document.addEventListener('click', (event) => {
-        const button = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-add]');
-        if (!button) return;
-        addItem(button.dataset.add!);
-        button.classList.remove('is-added');
-        void button.offsetWidth;
-        button.classList.add('is-added');
-        window.setTimeout(() => button.classList.remove('is-added'), 1400);
-      });
-
-      $cart.subscribe((lines) => {
-        document.querySelectorAll<HTMLElement>('[data-add]').forEach((button) => {
-          const qty = lines[button.dataset.add!] ?? 0;
-          button.dataset.qty = String(qty);
-          button.classList.toggle('has-qty', qty > 0);
-        });
-      });
     </script>
   </body>
 </html>

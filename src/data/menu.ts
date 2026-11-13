@@ -5,7 +5,7 @@ import { IMAGES } from './images';
  * (category, name, description, price, tags, image) so the client's Excel
  * export or a POS API can replace `MENU` without touching the components.
  */
-export type DietaryTag = 'VEG' | 'VEGAN' | 'GF';
+export type DietaryTag = 'VEG' | 'VEGAN' | 'GF' | 'NUTS' | 'SPICY';
 
 export interface MenuItem {
   id: string;
@@ -14,9 +14,12 @@ export interface MenuItem {
   description: string;
   price: number;
   tags: DietaryTag[];
-  /** Photo id, rendered through `photo()` in ./images */
+  /** Gallery path or legacy id — rendered through `mediaSrc()` / `photo()` */
   image?: string;
   popular?: boolean;
+  sortOrder?: number;
+  available?: boolean;
+  featured?: boolean;
 }
 
 export type CategoryId =
@@ -24,6 +27,7 @@ export type CategoryId =
   | 'street-food'
   | 'starters'
   | 'south-indian'
+  | 'indo-chinese'
   | 'curries'
   | 'rice-biryani'
   | 'breads'
@@ -42,9 +46,10 @@ export const CATEGORIES: Category[] = [
   { id: 'street-food', label: 'Street Food', intro: 'Tangy, crunchy, loud with flavour.' },
   { id: 'starters', label: 'Starters', intro: 'Something to share while you decide.' },
   { id: 'south-indian', label: 'South Indian', intro: 'Crisp, light and made for dipping.' },
+  { id: 'indo-chinese', label: 'Indo-Chinese', intro: 'Wok, heat and a little smoke.' },
   { id: 'curries', label: 'Curries', intro: 'Rich, slow and deeply comforting.' },
   { id: 'rice-biryani', label: 'Rice & Biryani', intro: 'Fragrant basmati, layered spice.' },
-  { id: 'breads', label: 'Breads', intro: 'Fresh from the tandoor.' },
+  { id: 'breads', label: 'Breads', intro: 'Fresh from the tawa.' },
   { id: 'desserts', label: 'Desserts', intro: 'A sweet ending.' },
   { id: 'drinks', label: 'Drinks', intro: 'Lassi, chai and the Gin in Zin & Gin.' },
 ];
@@ -59,27 +64,27 @@ export const MENU: MenuItem[] = [
   // Street food
   { id: 'pani-puri', category: 'street-food', name: 'Pani Puri', description: 'Crisp hollow puris, spiced mint water, potato and chickpea.', price: 8.9, tags: ['VEGAN'], image: IMAGES.paniPuri },
   { id: 'papdi-chaat', category: 'street-food', name: 'Papdi Chaat', description: 'Crackers, cool yoghurt, tamarind and mint chutney, pomegranate.', price: 9.5, tags: ['VEG'], image: IMAGES.chaat },
-  { id: 'samosa-chaat', category: 'street-food', name: 'Samosa Chaat', description: 'Crushed samosa over chole, yoghurt and sweet-sour chutneys.', price: 10.5, tags: ['VEG'] },
-  { id: 'vada-pav', category: 'street-food', name: 'Vada Pav', description: 'Mumbai\u2019s spiced potato fritter in a soft bun with garlic chutney.', price: 8.5, tags: ['VEGAN'] },
+  { id: 'samosa-chaat', category: 'street-food', name: 'Samosa Chaat', description: 'Crushed samosa over chole, yoghurt and sweet-sour chutneys.', price: 10.5, tags: ['VEG'], image: '/gallery/50.jpg' },
+  { id: 'vada-pav', category: 'street-food', name: 'Vada Pav', description: 'Mumbai\u2019s spiced potato fritter in a soft bun with garlic chutney.', price: 8.5, tags: ['VEGAN'], image: '/gallery/53.jpg' },
 
   // Starters
   { id: 'paneer-tikka', category: 'starters', name: 'Paneer Tikka', description: 'Marinated paneer grilled with peppers, onion and spices.', price: 14.5, tags: ['VEG', 'GF'], image: IMAGES.paneerTikka, popular: true },
   { id: 'veg-samosa', category: 'starters', name: 'Vegetable Samosa', description: 'Two crisp pastries of spiced potato and peas, tamarind chutney.', price: 7.5, tags: ['VEGAN'], image: IMAGES.samosa },
   { id: 'onion-bhaji', category: 'starters', name: 'Onion Bhaji', description: 'Crisp onion and gram-flour fritters with mint chutney.', price: 7.9, tags: ['VEGAN', 'GF'] },
-  { id: 'chilli-paneer', category: 'starters', name: 'Chilli Paneer', description: 'Wok-tossed paneer, peppers and spring onion, Indo-Chinese style.', price: 13.5, tags: ['VEG'] },
+  { id: 'chilli-paneer', category: 'indo-chinese', name: 'Chilli Paneer', description: 'Wok-tossed paneer, peppers and spring onion, Indo-Chinese style.', price: 13.5, tags: ['VEG', 'SPICY'], image: IMAGES.paneerTikka },
 
   // South Indian
   { id: 'masala-dosa', category: 'south-indian', name: 'Masala Dosa', description: 'A crisp dosa filled with spiced potato, served with chutneys and sambar.', price: 12.5, tags: ['VEG', 'GF'], image: IMAGES.masalaDosa, popular: true },
-  { id: 'mysore-dosa', category: 'south-indian', name: 'Mysore Masala Dosa', description: 'Dosa brushed with a fiery red chutney and filled with potato masala.', price: 13.5, tags: ['VEG', 'GF'] },
+  { id: 'mysore-dosa', category: 'south-indian', name: 'Mysore Masala Dosa', description: 'Dosa brushed with a fiery red chutney and filled with potato masala.', price: 13.5, tags: ['VEG', 'GF', 'SPICY'] },
   { id: 'idli-sambar', category: 'south-indian', name: 'Idli Sambar', description: 'Steamed rice cakes with sambar and fresh coconut chutney.', price: 9.5, tags: ['VEGAN', 'GF'], image: IMAGES.idliVada },
-  { id: 'medu-vada', category: 'south-indian', name: 'Medu Vada', description: 'Crisp lentil doughnuts, sambar and chutney on the side.', price: 9.5, tags: ['VEGAN', 'GF'] },
+  { id: 'medu-vada', category: 'south-indian', name: 'Medu Vada', description: 'Crisp lentil doughnuts, sambar and chutney on the side.', price: 9.5, tags: ['VEGAN', 'GF'], image: '/gallery/52.jpg' },
 
   // Curries
-  { id: 'paneer-butter-masala', category: 'curries', name: 'Paneer Butter Masala', description: 'Paneer cooked in a rich, creamy tomato sauce.', price: 14.9, tags: ['VEG'] },
+  { id: 'paneer-butter-masala', category: 'curries', name: 'Paneer Butter Masala', description: 'Paneer cooked in a rich, creamy tomato sauce.', price: 14.9, tags: ['VEG'], image: '/gallery/32.jpg' },
   { id: 'dal-tadka', category: 'curries', name: 'Dal Tadka', description: 'Slow-cooked lentils finished with garlic and spices.', price: 12.5, tags: ['VEGAN'] },
   { id: 'chana-masala', category: 'curries', name: 'Chana Masala', description: 'Chickpeas simmered with tomato and warming Indian spices.', price: 12.9, tags: ['VEGAN'] },
   { id: 'palak-paneer', category: 'curries', name: 'Palak Paneer', description: 'Soft paneer in a silky, gently spiced spinach sauce.', price: 14.5, tags: ['VEG', 'GF'] },
-  { id: 'malai-kofta', category: 'curries', name: 'Malai Kofta', description: 'Paneer and potato dumplings in a creamy cashew sauce.', price: 15.5, tags: ['VEG'] },
+  { id: 'malai-kofta', category: 'curries', name: 'Malai Kofta', description: 'Paneer and potato dumplings in a creamy cashew sauce.', price: 15.5, tags: ['VEG', 'NUTS'] },
 
   // Rice & biryani
   { id: 'veg-biryani', category: 'rice-biryani', name: 'Vegetable Biryani', description: 'Fragrant basmati rice layered with vegetables and aromatic spices.', price: 15.9, tags: ['VEG', 'GF'], image: IMAGES.vegPulao, popular: true },
@@ -89,19 +94,19 @@ export const MENU: MenuItem[] = [
   // Breads
   { id: 'butter-naan', category: 'breads', name: 'Butter Naan', description: 'Soft, blistered and brushed with butter.', price: 3.5, tags: ['VEG'] },
   { id: 'garlic-naan', category: 'breads', name: 'Garlic Naan', description: 'Garlic, coriander and a little too much butter.', price: 3.9, tags: ['VEG'] },
-  { id: 'tandoori-roti', category: 'breads', name: 'Tandoori Roti', description: 'Whole-wheat flatbread from the tandoor.', price: 3.0, tags: ['VEGAN'] },
+  { id: 'tandoori-roti', category: 'breads', name: 'Tawa Roti', description: 'Whole-wheat flatbread from the tawa.', price: 3.0, tags: ['VEGAN'] },
   { id: 'lachha-paratha', category: 'breads', name: 'Lachha Paratha', description: 'Flaky, layered and crisp at the edges.', price: 4.5, tags: ['VEG'] },
 
   // Desserts
-  { id: 'gulab-jamun', category: 'desserts', name: 'Gulab Jamun', description: 'Warm milk dumplings in cardamom and rose syrup.', price: 6.5, tags: ['VEG'] },
+  { id: 'gulab-jamun', category: 'desserts', name: 'Gulab Jamun', description: 'Warm milk dumplings in cardamom and rose syrup.', price: 6.5, tags: ['VEG'], image: '/gallery/25.jpg' },
   { id: 'rasmalai', category: 'desserts', name: 'Rasmalai', description: 'Soft cheese dumplings in chilled saffron milk, pistachio.', price: 7.5, tags: ['VEG', 'GF'] },
   { id: 'mango-kulfi', category: 'desserts', name: 'Mango Kulfi', description: 'Dense, slow-set Indian ice cream with Alphonso mango.', price: 6.9, tags: ['VEG', 'GF'] },
 
   // Drinks
   { id: 'mango-lassi', category: 'drinks', name: 'Mango Lassi', description: 'Chilled yoghurt, mango and a pinch of cardamom.', price: 5.5, tags: ['VEG', 'GF'] },
   { id: 'masala-chai', category: 'drinks', name: 'Masala Chai', description: 'Black tea brewed with milk, ginger and whole spice.', price: 3.9, tags: ['VEG', 'GF'] },
-  { id: 'signature-gt', category: 'drinks', name: 'Zin & Gin Signature G&T', description: 'Dry gin, tonic, green cardamom and orange peel.', price: 11.5, tags: ['VEGAN', 'GF'] },
-  { id: 'jaljeera-cooler', category: 'drinks', name: 'Jaljeera Cooler', description: 'Cumin, mint and lime over crushed ice. Alcohol-free.', price: 6.5, tags: ['VEGAN', 'GF'] },
+  { id: 'signature-gt', category: 'drinks', name: 'Bombay Botanist G&T', description: 'Dry gin, tonic, green cardamom and orange peel.', price: 11.5, tags: ['VEGAN', 'GF'], image: IMAGES.cocktailDark },
+  { id: 'jaljeera-cooler', category: 'drinks', name: 'Jaljeera Cooler', description: 'Cumin, mint and lime over crushed ice. Alcohol-free.', price: 6.5, tags: ['VEGAN', 'GF'], image: IMAGES.cocktailPour },
 ];
 
 export const MOST_LOVED_IDS = ['masala-dosa', 'paneer-tikka', 'veg-biryani'] as const;
@@ -114,3 +119,41 @@ export const formatPrice = (value: number) =>
   new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' }).format(value);
 
 export const PICKUP_DISCOUNT = 0.1;
+
+/** Condensed booklet spreads. Desktop shows these in pairs. */
+export interface BookPageDef {
+  id: string;
+  title: string;
+  kicker: string;
+  categories: CategoryId[];
+  image?: string;
+}
+
+export const BOOK_PAGES: BookPageDef[] = [
+  {
+    id: 'starters',
+    title: 'Starters & Chaat',
+    kicker: 'To begin',
+    categories: ['starters', 'street-food'],
+    image: IMAGES.samosa,
+  },
+  {
+    id: 'mains',
+    title: 'Mains & Sides',
+    kicker: 'For the table',
+    categories: ['curries', 'rice-biryani', 'breads'],
+  },
+  {
+    id: 'south',
+    title: 'South Indian & Indo-Chinese',
+    kicker: 'Crisp, hot, familiar',
+    categories: ['south-indian', 'indo-chinese', 'breakfast'],
+    image: IMAGES.masalaDosa,
+  },
+  {
+    id: 'finish',
+    title: 'Desserts & Drinks',
+    kicker: 'Stay a little longer',
+    categories: ['desserts', 'drinks'],
+  },
+];

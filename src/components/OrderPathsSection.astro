@@ -1,0 +1,160 @@
+---
+import { bonappioHref } from '../data/ordering';
+import { PATHS } from '../data/orderPaths';
+import { SITE } from '../data/site';
+import BrandDoodles from './BrandDoodles.astro';
+---
+
+<section class="order-paths section" id="order" data-surface="light" aria-labelledby="order-paths-title">
+  <BrandDoodles />
+  <div class="container order-paths__inner">
+    <header class="order-paths__head">
+      <p class="eyebrow" data-reveal="fade">Zin &amp; Gin</p>
+      <h2 id="order-paths-title" class="h1" data-reveal="lines">
+        <span class="line"><span>What&apos;s the mood</span></span>
+        <span class="line"><span><em>today?</em></span></span>
+      </h2>
+    </header>
+
+    <div class="order-paths__grid">
+      <article class="opath opath--reserve" data-reveal="fade">
+        <div class="opath__copy">
+          <p class="opath__eyebrow">Guest reservation</p>
+          <h3 class="h3">Reserve a table</h3>
+          <p class="opath__body">One simple request for hotel guests and visitors dining at Zin &amp; Gin.</p>
+        </div>
+        <a class="btn opath__cta opath__cta--reserve" href={PATHS.reserve}>
+          Reserve now <span class="arrow">→</span>
+        </a>
+      </article>
+
+      <article class="opath opath--pickup" data-reveal="fade" data-delay="0.06">
+        <span class="opath__badge">10% OFF</span>
+        <div class="opath__copy">
+          <p class="opath__eyebrow">Pickup</p>
+          <h3 class="h3">Takeaway</h3>
+          <p class="opath__body">Order directly, collect from Zin &amp; Gin — <strong>10% off</strong> when you order for pickup.</p>
+        </div>
+        <a class="btn opath__cta" href={bonappioHref}>
+          Order for pickup <span class="arrow arrow--diag">↗</span>
+        </a>
+      </article>
+
+      <article class="opath" data-reveal="fade" data-delay="0.12">
+        <div class="opath__copy">
+          <p class="opath__eyebrow">Delivery</p>
+          <h3 class="h3">Feeling lazy?</h3>
+          <p class="opath__body">Get your Zin &amp; Gin favourites delivered through Uber Eats.</p>
+        </div>
+        {
+          SITE.uberEatsUrl ? (
+            <a class="btn opath__cta" href={SITE.uberEatsUrl} target="_blank" rel="noopener noreferrer">
+              Order on Uber Eats <span class="arrow arrow--diag">↗</span>
+            </a>
+          ) : (
+            <p class="opath__note opath__cta">Uber Eats link coming soon.</p>
+          )
+        }
+      </article>
+    </div>
+  </div>
+</section>
+
+<style>
+  .order-paths {
+    position: relative;
+    background: var(--ivory);
+    color: var(--petrol);
+    overflow: hidden;
+  }
+  .order-paths__inner {
+    position: relative;
+    z-index: 1;
+    isolation: isolate;
+  }
+  .order-paths__head {
+    max-width: 38rem;
+    margin-bottom: clamp(1.25rem, 3vw, 2rem);
+  }
+  .order-paths__head .eyebrow {
+    color: rgba(6, 76, 79, 0.55);
+  }
+  .order-paths__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    align-items: stretch;
+  }
+  .opath {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.1rem;
+    min-height: 100%;
+    padding: 1.45rem 1.5rem 1.55rem;
+    border-radius: var(--radius-lg);
+    background: var(--cream);
+    box-shadow: inset 0 0 0 1px rgba(6, 76, 79, 0.1);
+    transition: transform 0.6s var(--ease-out);
+  }
+  .opath:hover {
+    transform: translateY(-3px);
+  }
+  .opath__badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.35rem 0.65rem;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #c7653c, #e08a5a);
+    color: var(--ivory);
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    box-shadow: 0 8px 20px rgba(199, 101, 60, 0.35);
+  }
+  .opath__copy {
+    display: grid;
+    gap: 0.45rem;
+    text-align: left;
+  }
+  .opath__eyebrow {
+    margin: 0;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(6, 76, 79, 0.55);
+  }
+  .opath .h3 {
+    margin: 0;
+  }
+  .opath__body,
+  .opath__note {
+    margin: 0;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+  }
+  .opath__body strong {
+    font-weight: 700;
+    color: var(--petrol);
+  }
+  .opath__cta {
+    margin-top: auto;
+    width: 100%;
+    justify-content: center;
+  }
+  .opath__cta--reserve {
+    min-height: 52px;
+    font-size: 0.82rem;
+    letter-spacing: 0.18em;
+    padding-inline: 1.6rem;
+  }
+  @media (max-width: 960px) {
+    .order-paths__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

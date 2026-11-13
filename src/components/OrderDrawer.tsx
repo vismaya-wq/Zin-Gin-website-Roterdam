@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { useStore } from '@nanostores/react';
 import {
   $discount,
@@ -16,19 +16,7 @@ import { formatPrice } from '../data/menu';
 import { photo } from '../data/images';
 import { submitPickupOrder } from '../lib/api';
 
-function pickupSlots() {
-  const slots = ['As soon as possible (± 30 min)'];
-  const now = new Date();
-  const start = new Date(now);
-  start.setMinutes(now.getMinutes() < 30 ? 30 : 60, 0, 0);
-  start.setMinutes(start.getMinutes() + 30);
-  for (let i = 0; i < 10; i++) {
-    const slot = new Date(start.getTime() + i * 15 * 60 * 1000);
-    if (slot.getHours() >= 23 || slot.getDate() !== now.getDate()) break;
-    slots.push(slot.toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' }));
-  }
-  return slots;
-}
+const PICKUP_PRESETS = ['ASAP', '18:30', '19:00', '19:30', '20:00'] as const;
 
 export function QtyStepper({ id, qty, name }: { id: string; qty: number; name: string }) {
   return (
@@ -56,8 +44,8 @@ export default function OrderDrawer() {
   const [submitting, setSubmitting] = useState(false);
   const [reference, setReference] = useState('');
   const [pickupTime, setPickupTime] = useState('');
+  const [pickupChoice, setPickupChoice] = useState<string>(PICKUP_PRESETS[0]);
   const closeRef = useRef<HTMLButtonElement>(null);
-  const slots = useMemo(() => (open ? pickupSlots() : []), [open]);
 
   useEffect(() => {
     hydrateCart();
@@ -76,6 +64,11 @@ export default function OrderDrawer() {
   async function placeOrder(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+    const preset = String(data.get('pickupPreset'));
+    const customTime = String(data.get('pickupCustom') || '');
+    const resolvedPickup =
+      preset === 'other' && customTime ? customTime : preset === 'other' ? 'To be agreed' : preset;
+
     setSubmitting(true);
     try {
       const result = await submitPickupOrder({
@@ -85,11 +78,12 @@ export default function OrderDrawer() {
         total,
         name: String(data.get('name')),
         phone: String(data.get('phone')),
-        email: String(data.get('email')),
-        pickupTime: String(data.get('pickupTime')),
+        email: String(data.get('email') || '') || undefined,
+        pickupTime: resolvedPickup,
+        specialInstructions: String(data.get('instructions') || '') || undefined,
       });
       setReference(result.reference);
-      setPickupTime(String(data.get('pickupTime')));
+      setPickupTime(resolvedPickup);
       clearCart();
       $drawerView.set('done');
     } finally {
@@ -106,10 +100,10 @@ export default function OrderDrawer() {
         <header className="drawer__head">
           <div>
             <p className="eyebrow eyebrow--plain eyebrow--terra">
-              {view === 'done' ? 'Order received' : 'Pickup · 10% off'}
+              {view === 'done' ? 'Takeaway request' : 'Takeaway · 10% off'}
             </p>
             <h2 id="drawer-title" className="drawer__title">
-              {view === 'details' ? 'Nearly ready.' : view === 'done' ? 'Thank you.' : 'Your order'}
+              {view === 'details' ? 'Your details' : view === 'done' ? 'Request sent' : 'Your order'}
             </h2>
           </div>
           <button ref={closeRef} type="button" className="drawer__close" onClick={closeDrawer} aria-label="Close order">
@@ -120,22 +114,23 @@ export default function OrderDrawer() {
         <div className="drawer__body" data-lenis-prevent>
           {view === 'done' ? (
             <div className="drawer__done step-in">
-              <div className="plate-mark" aria-hidden="true">
-                <span>✓</span>
-              </div>
-              <h3 className="h3">The kitchen has your order.</h3>
-              <p>We’ll contact you shortly to confirm the pickup time.</p>
+              <p className="status-pill status-pill--pending">Order request sent</p>
+              <h3 className="h3">Awaiting manager confirmation</h3>
+              <p>
+                We&apos;ve received your takeaway request. Our manager will check the dishes, final price and pickup
+                time and confirm your order.
+              </p>
               <dl className="drawer__ref">
                 <div>
                   <dt>Reference</dt>
                   <dd>{reference}</dd>
                 </div>
                 <div>
-                  <dt>Pickup</dt>
+                  <dt>Requested pickup</dt>
                   <dd>{pickupTime}</dd>
                 </div>
                 <div>
-                  <dt>Where</dt>
+                  <dt>Collect at</dt>
                   <dd>Zin &amp; Gin · Schiekade 730, inside Teleport Hotel</dd>
                 </div>
               </dl>
@@ -146,9 +141,9 @@ export default function OrderDrawer() {
           ) : isEmpty ? (
             <div className="drawer__empty step-in">
               <p className="drawer__empty-title">Nothing on the plate yet.</p>
-              <p>Add a few favourites and collect them from our kitchen — with 10% off.</p>
-              <a className="btn" href="/menu#popular" onClick={closeDrawer}>
-                Explore the Menu <span className="arrow">→</span>
+              <p>Add dishes from the menu — takeaway orders get 10% off when you collect.</p>
+              <a className="btn" href="/menu?takeaway=1#popular" onClick={closeDrawer}>
+                Browse the Menu <span className="arrow">→</span>
               </a>
             </div>
           ) : view === 'cart' ? (
@@ -166,6 +161,9 @@ export default function OrderDrawer() {
                     <p className="cart-line__name">{item.name}</p>
                     <p className="cart-line__unit">{formatPrice(item.price)} each</p>
                     <QtyStepper id={item.id} qty={qty} name={item.name} />
+                    <button type="button" className="cart-line__remove" onClick={() => setQty(item.id, 0)}>
+                      Remove
+                    </button>
                   </div>
                   <p className="cart-line__total">{formatPrice(lineTotal)}</p>
                 </li>
@@ -178,22 +176,38 @@ export default function OrderDrawer() {
                 <input name="name" autoComplete="name" required placeholder="Your name" />
               </label>
               <label className="field">
-                <span>Phone</span>
+                <span>Phone number</span>
                 <input name="phone" type="tel" autoComplete="tel" required placeholder="+31 6 …" />
               </label>
               <label className="field">
-                <span>Email</span>
-                <input name="email" type="email" autoComplete="email" required placeholder="you@example.com" />
+                <span>Email — optional</span>
+                <input name="email" type="email" autoComplete="email" placeholder="you@example.com" />
               </label>
               <label className="field">
                 <span>Preferred pickup time</span>
-                <select name="pickupTime" required defaultValue={slots[0]}>
-                  {slots.map((slot) => (
-                    <option key={slot}>{slot}</option>
+                <select
+                  name="pickupPreset"
+                  required
+                  value={pickupChoice}
+                  onChange={(e) => setPickupChoice(e.target.value)}
+                >
+                  {PICKUP_PRESETS.map((slot) => (
+                    <option key={slot} value={slot}>{slot}</option>
                   ))}
+                  <option value="other">Choose another time</option>
                 </select>
               </label>
-              <p className="form__note">No online payment needed — pay when you collect.</p>
+              {pickupChoice === 'other' && (
+                <label className="field step-in">
+                  <span>Your preferred time</span>
+                  <input name="pickupCustom" type="time" required />
+                </label>
+              )}
+              <label className="field">
+                <span>Special instructions</span>
+                <textarea name="instructions" rows={3} placeholder="Allergies, spice level, packaging…" />
+              </label>
+              <p className="form__note">No online payment — the manager confirms availability and final price.</p>
             </form>
           )}
         </div>
@@ -206,17 +220,17 @@ export default function OrderDrawer() {
                 <dd>{formatPrice(subtotal)}</dd>
               </div>
               <div className="totals__save">
-                <dt>Direct pickup · 10% off</dt>
+                <dt>Direct takeaway · 10% off</dt>
                 <dd>−{formatPrice(discount)}</dd>
               </div>
               <div className="totals__grand">
-                <dt>Total at pickup</dt>
+                <dt>Expected total</dt>
                 <dd>{formatPrice(total)}</dd>
               </div>
             </dl>
             {view === 'cart' ? (
               <button type="button" className="btn btn--block" onClick={() => $drawerView.set('details')}>
-                Continue to Pickup Details <span className="arrow">→</span>
+                Continue <span className="arrow">→</span>
               </button>
             ) : (
               <div className="drawer__actions">
@@ -224,15 +238,15 @@ export default function OrderDrawer() {
                   ← Back
                 </button>
                 <button type="submit" form="pickup-form" className="btn btn--block" disabled={submitting}>
-                  {submitting ? 'Sending to the kitchen…' : (
+                  {submitting ? 'Sending request…' : (
                     <>
-                      Place Pickup Order <span className="arrow">→</span>
+                      Send Order Request <span className="arrow">→</span>
                     </>
                   )}
                 </button>
               </div>
             )}
-            <p className="drawer__note">Our team will contact you to confirm the order and pickup time.</p>
+            <p className="drawer__note">Awaiting manager confirmation before your order is final.</p>
           </footer>
         )}
       </aside>

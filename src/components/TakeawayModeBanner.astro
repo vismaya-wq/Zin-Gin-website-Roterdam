@@ -1,0 +1,74 @@
+---
+---
+
+<div class="takeaway-strip" role="region" aria-label="Takeaway ordering">
+  <div class="container takeaway-strip__inner">
+    <div class="takeaway-strip__copy">
+      <p class="eyebrow eyebrow--plain eyebrow--terra">Takeaway</p>
+      <p class="takeaway-strip__title">Order online.<br />Pick up at Zin &amp; Gin.</p>
+      <p class="takeaway-strip__offer"><span>10% off</span> direct pickup</p>
+    </div>
+    <p class="takeaway-strip__hint">Checkout on <strong>BonAppio</strong> — choose pickup or delivery there.</p>
+    <a class="link-arrow" href="/order">Order for pickup <span class="arrow arrow--diag">↗</span></a>
+  </div>
+</div>
+
+<style>
+  .takeaway-strip {
+    position: sticky;
+    top: var(--nav-h);
+    z-index: 39;
+    background: var(--petrol);
+    color: var(--ivory);
+    border-bottom: 1px solid var(--on-dark-faint);
+  }
+  .takeaway-strip__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    padding-block: 1.1rem;
+  }
+  .takeaway-strip__copy {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem 2rem;
+    flex-wrap: wrap;
+  }
+  .takeaway-strip__title {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(1.35rem, 2vw, 1.75rem);
+    line-height: 1.15;
+  }
+  .takeaway-strip__offer {
+    margin: 0;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .takeaway-strip__offer span {
+    display: inline-block;
+    margin-right: 0.5rem;
+    padding: 0.35rem 0.7rem;
+    border-radius: 999px;
+    background: var(--terra);
+    color: var(--white);
+  }
+  .takeaway-strip__hint {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--on-dark-soft);
+  }
+  .takeaway-strip .link-arrow {
+    color: var(--ivory);
+  }
+  @media (max-width: 767px) {
+    .takeaway-strip__inner {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>
