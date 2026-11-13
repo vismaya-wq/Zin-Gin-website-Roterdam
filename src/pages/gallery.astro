@@ -6,6 +6,7 @@ import { isSupabaseConfigured } from '../lib/supabase/env';
 import { createSupabaseAnonClient } from '../lib/supabase/anon';
 import { getGalleryRecords } from '../server/db';
 import { sbGetGalleryRecords } from '../server/supabase-cms';
+import { GALLERY as GALLERY_SEED } from '../data/gallery';
 import type { GalleryRecord } from '../data/ops';
 
 let GALLERY: GalleryRecord[] = getGalleryRecords();
@@ -20,6 +21,10 @@ if (isSupabaseConfigured()) {
 function galleryAlt(item: GalleryRecord) {
   return item.caption?.trim() || item.alt?.trim() || 'Zin & Gin gallery photograph';
 }
+
+const allowed = new Set(GALLERY_SEED.map((item) => item.src));
+const matched = GALLERY.filter((item) => [...allowed].some((src) => item.src === src || item.src.endsWith(src)));
+const photos = (matched.length ? matched : GALLERY).slice(0, GALLERY_SEED.length);
 ---
 
 <Layout
@@ -47,7 +52,7 @@ function galleryAlt(item: GalleryRecord) {
     </header>
 
     {
-      GALLERY.length === 0 ? (
+      photos.length === 0 ? (
         <div class="gallery-editorial__empty container">
           <p>Gallery photographs will appear here soon.</p>
           <a class="link-arrow" href="/menu">
@@ -56,7 +61,7 @@ function galleryAlt(item: GalleryRecord) {
         </div>
       ) : (
         <div class="gallery-editorial__masonry" data-reveal="fade">
-          {GALLERY.map((item, index) => (
+          {photos.map((item, index) => (
             <article class="gallery-editorial__piece">
               <button
                 type="button"
@@ -69,7 +74,7 @@ function galleryAlt(item: GalleryRecord) {
                 data-index={index}
                 aria-label={item.caption?.trim() ? `View larger: ${item.caption}` : 'View larger'}
               >
-                <img src={item.src} alt={galleryAlt(item)} loading={index < 6 ? 'eager' : 'lazy'} decoding="async" />
+                <img src={item.src} alt={galleryAlt(item)} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" fetchpriority={index === 0 ? 'high' : 'low'} />
                 {item.caption?.trim() ? (
                   <span class="gallery-editorial__hover-cap">{item.caption}</span>
                 ) : null}
@@ -103,7 +108,7 @@ function galleryAlt(item: GalleryRecord) {
       <button type="button" class="gallery-lightbox__next" data-gallery-next aria-label="Next image">→</button>
     </div>
   </dialog>
-  <script id="gallery-data" type="application/json" set:html={JSON.stringify(GALLERY)} />
+  <script id="gallery-data" type="application/json" set:html={JSON.stringify(photos)} />
 </Layout>
 
 <script>

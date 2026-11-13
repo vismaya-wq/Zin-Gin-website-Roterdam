@@ -32,6 +32,42 @@
   transform: scaleX(0);
 }
 
+.story-hero {
+  max-width: 68rem;
+}
+.story-flow {
+  display: grid;
+  gap: clamp(2.5rem, 6vw, 4.5rem);
+  padding-bottom: clamp(3.5rem, 8vw, 6rem);
+}
+.story-block {
+  display: grid;
+  gap: clamp(1.75rem, 4vw, 2.75rem);
+}
+.story-stanza {
+  display: grid;
+  gap: 1.35rem;
+  width: min(68rem, calc(100% - 2.5rem));
+  margin-inline: auto;
+}
+.story-stanza p {
+  margin: 0;
+  max-width: none;
+  font-size: clamp(1.12rem, 1.55vw, 1.35rem);
+  line-height: 1.85;
+  color: var(--ink-soft);
+}
+.story-frame {
+  width: min(68rem, calc(100% - 2.5rem));
+  margin: 0 auto;
+}
+.story-frame img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 18px;
+}
 .story-copy {
   display: grid;
   gap: 1.15rem;

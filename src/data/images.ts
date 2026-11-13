@@ -1,5 +1,5 @@
 /** Client food photography under /public/gallery (see scripts/sync-gallery-from-assets.mjs). */
-export const GALLERY_IMAGE_COUNT = 62;
+export const GALLERY_IMAGE_COUNT = 18;
 
 const isLocal = (value: string) => value.startsWith('/') || value.startsWith('http');
 
